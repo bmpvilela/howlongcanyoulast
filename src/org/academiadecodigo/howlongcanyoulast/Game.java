@@ -18,7 +18,7 @@ public class Game {
 
     public void init(){
 
-        Field.init(cols,rows);
+        Field.init("map2.txt");
         Field.draw();
 
     }

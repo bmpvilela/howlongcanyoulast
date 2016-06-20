@@ -12,9 +12,7 @@ public class Main {
 
         //TODO Choose client or server by args
 
-        System.out.println("Generate");
-        MazeGenerator.GenerateMaze();
-        System.out.println("Generated");
+        MazeGenerator.GenerateMap();
         Game game = new Game(100, 25);
         game.init();
         game.start();

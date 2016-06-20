@@ -1,7 +1,6 @@
 package org.academiadecodigo.howlongcanyoulast.utilities;
 
 
-import com.apple.eio.FileManager;
 import org.academiadecodigo.howlongcanyoulast.FileTools;
 
 /**
@@ -9,30 +8,56 @@ import org.academiadecodigo.howlongcanyoulast.FileTools;
  */
 public abstract class MazeGenerator {
 
-    private static final int MAX_SIZE = 50;
+    private static final int MAX_SIZE_ROW = 30;
+    private static final int MAX_SIZE_COL = 100;
 
-    public static void GenerateMaze(){
+    public static void GenerateMap(){
 
-        System.out.println("Generate maze");
+        String[] toReturn = new String[MAX_SIZE_ROW];
 
-        String[] toReturn = new String[MAX_SIZE];
+        int pathFrom = Randomize.inclusive(MAX_SIZE_ROW);
 
 
-        for (int i = 0; i < MAX_SIZE; i++) {
+        for (int i = 0; i < MAX_SIZE_ROW; i++) {
 
             toReturn[i] = new String("");
 
-            for (int j = 0; j <MAX_SIZE ; j++) {
+            for (int j = 0; j < MAX_SIZE_COL ; j++) {
 
-                toReturn[i] += Randomize.inclusive(7);
+                //Generate Borders
+                if(i < 2 || j == 0 || i > MAX_SIZE_ROW-2 || j == MAX_SIZE_COL-1){
+                    toReturn[i] += 1; //Color blue for the border
+
+                //Set the players positions switch the 0 for player cursor
+                } else if((i < 3 && j < 3) || (i> MAX_SIZE_ROW-3 && j < 3) || (i<3 && j>MAX_SIZE_COL-4) || (i>MAX_SIZE_ROW-3 && j>MAX_SIZE_COL-4) ){
+                    toReturn[i] += 0; // Empty square change for the player icon
+                //Set the outside path
+                } else if(i<3 || j<3 || i>MAX_SIZE_ROW-3 || j>MAX_SIZE_COL-4){
+                    toReturn[i] += 2;
+
+                //Set the center
+                } else if(i> MAX_SIZE_ROW/2-4 && j > MAX_SIZE_COL/2-4 && i < MAX_SIZE_ROW/2+4 && j <MAX_SIZE_COL/2+4 ){
+                    toReturn[i] += 3;
+                    System.out.println("col: " + i + " row: " +j);
+                } else if(i > pathFrom-2 && i<pathFrom){
+                    toReturn[i] += 5;
+                }
+
+
+                else {
+                    toReturn[i] += 4;
+                   // toReturn[i] += Randomize.inclusive(7);
+
+                }
             }
         }
 
-        System.out.println("Sent to write");
         FileTools.fileWrite("map2.txt", toReturn);
 
 
     }
+
+
 
 
 
