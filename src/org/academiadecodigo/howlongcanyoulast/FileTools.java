@@ -1,8 +1,6 @@
 package org.academiadecodigo.howlongcanyoulast;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +16,14 @@ public class FileTools {
 
         BufferedReader br = null;
         String line = null;
-        List<String> lines=null;
+        List<String> lines = null;
 
         try {
 
             File theFile = new File(fileName);
-            if(!theFile.exists()) { theFile.createNewFile(); }
+            if (!theFile.exists()) {
+                theFile.createNewFile();
+            }
 
             FileReader fileReader = new FileReader(theFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -46,9 +46,9 @@ public class FileTools {
     /**
      * CHECK THE LENGHT OF A SPECIFIC FILE
      */
-    public static long fileSize(String fileName){
+    public static long fileSize(String fileName) {
 
-        long lenght=0;
+        long lenght = 0;
 
         try {
 
@@ -58,7 +58,7 @@ public class FileTools {
         } catch (Exception e) {
             System.out.println("ERROR reading file: " + e.getMessage());
 
-        }finally {
+        } finally {
             return lenght;
         }
     }
@@ -70,4 +70,52 @@ public class FileTools {
         File fis = new File(fileName);
         return fis.exists();
     }
+
+
+    public static void fileWrite(String fileName, String[] toWrite) {
+
+        BufferedWriter bw = null;
+
+        try {
+
+            File theFile = new File(fileName);
+            if (!theFile.exists()) {
+                theFile.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(theFile);
+            bw = new BufferedWriter(fw);
+
+
+//            int i = 0;
+//            while (toWrite[i] != null) {
+//                bw.write(toWrite[i]);
+//                bw.newLine();
+//                i++;
+//            }
+
+
+            for (int i = 0; i < toWrite.length ; i++) {
+                bw.write(toWrite[i]);
+                bw.newLine();
+            }
+
+            bw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+
+            } catch (Exception e) {
+                System.out.println("Error closing the BufferedWriter: " + e.getMessage());
+            }
+        }
+    }
+
+
 }
+
+
+

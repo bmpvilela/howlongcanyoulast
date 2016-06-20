@@ -48,7 +48,7 @@ public final class Field {
 
         screen.startScreen();
 
-        map = FileTools.fileRead("map.txt");
+        map = FileTools.fileRead("map2.txt");
     }
 
     /**
