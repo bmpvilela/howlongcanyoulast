@@ -13,12 +13,18 @@ public class MySpecialClientThread implements Runnable {
 
     private Socket socket;
     private Server server;
+    private String name;
 
-    public MySpecialClientThread(Socket socket, Server server) {
+    public MySpecialClientThread(Socket socket, Server server, String name) {
 
         this.socket = socket;
         this.server = server;
+        this.name = name;
 
+    }
+
+    public String getName() {
+        return name;
     }
 
     // Declaring input and output streams
@@ -39,15 +45,15 @@ public class MySpecialClientThread implements Runnable {
 
             while(true) {
                 // Waits for input and stores it in an array of bytes
-                int i = inputStream.read(bytes);
-                String str = new String(bytes);
-                System.out.println(str);
+                int i = inputStream.read(bytes);    //TODO atençao ao null
+                //String str = new String(bytes);
+                //System.out.println(str);
                 if (i == -1) {
                     server.clientList.remove(this);
                     break;
                 }
                 // Commands server to send the byte array to all clients
-                server.sendToAll(bytes);
+                server.getClientsName(bytes, name);
             }
 
         } catch (IOException e) {

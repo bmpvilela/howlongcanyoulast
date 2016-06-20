@@ -34,11 +34,13 @@ public class Server {
             s = new ServerSocket(PORT_NUMBER);
 
             Socket clientSocket;
+            int i = 1;
 
             while(true) {
                 clientSocket = s.accept();
                 System.out.println("Someone connected.");
-                MySpecialClientThread clientThread = new MySpecialClientThread(clientSocket, this);
+                MySpecialClientThread clientThread = new MySpecialClientThread(clientSocket, this, "Player "+i);
+                i++;
                 pool.submit(new Thread(clientThread));
                 clientList.add(clientThread);
             }
@@ -56,11 +58,15 @@ public class Server {
 
     }
 
-    protected synchronized void sendToAll(byte[] bytes) {
+    protected String[] getClientNames() {
+        String[] names = new String[clientList.size()];
         Iterator it = clientList.iterator();
-        while(it.hasNext()){
-            ((MySpecialClientThread)it.next()).write(bytes);
+        int counter = 0;
+        while (it.hasNext()){
+            names[0]=((MySpecialClientThread)it.next()).getName();
+            counter++;
         }
+        return names;
     }
 
 
