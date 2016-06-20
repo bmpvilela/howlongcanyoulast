@@ -1,6 +1,5 @@
-package org.academiadecodigo.lanterna;
+package org.academiadecodigo.howlongcanyoulast;
 
-import org.academiadecodigo.lanterna.Field;
 /**
  * Created by brunovilela on 19/06/16.
  */

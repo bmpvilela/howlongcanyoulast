@@ -1,4 +1,4 @@
-package org.academiadecodigo.lanterna;
+package org.academiadecodigo.howlongcanyoulast;
 
 /**
  * Created by brunovilela on 19/06/16.
@@ -6,6 +6,8 @@ package org.academiadecodigo.lanterna;
 public class Main {
 
     public static void main(String[] args) {
+
+        //TODO Choose client or server by args
 
         Game game = new Game(100,25);
         game.init();

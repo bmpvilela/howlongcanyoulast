@@ -1,4 +1,4 @@
-package org.academiadecodigo.lanterna;
+package org.academiadecodigo.howlongcanyoulast;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.screen.Screen;

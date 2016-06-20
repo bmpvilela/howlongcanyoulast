@@ -1,4 +1,4 @@
-package org.academiadecodigo.lanterna;
+package org.academiadecodigo.howlongcanyoulast;
 
 import java.io.BufferedReader;
 import java.io.File;
