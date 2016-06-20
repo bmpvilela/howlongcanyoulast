@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.screen.Screen;
@@ -78,6 +78,10 @@ public final class Field {
             }
             row++;
         }
+    }
+
+    public static Screen getScreen() {
+        return screen;
     }
 
     public static int getWidth() {

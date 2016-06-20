@@ -1,4 +1,6 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
+
+import org.academiadecodigo.howlongcanyoulast.utilities.Field;
 
 /**
  * Created by brunovilela on 19/06/16.

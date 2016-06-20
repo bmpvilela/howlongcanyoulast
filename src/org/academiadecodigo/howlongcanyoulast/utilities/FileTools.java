@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +14,7 @@ public class FileTools {
     /**
      * READ A FILE
      */
+
     public static String[] fileRead(String fileName) {
 
         BufferedReader br = null;
