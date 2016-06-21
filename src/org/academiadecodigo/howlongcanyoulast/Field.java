@@ -1,9 +1,11 @@
 package org.academiadecodigo.howlongcanyoulast;
 
 import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
+import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 public final class Field {
 
@@ -61,6 +63,8 @@ public final class Field {
 
         drawMap(map);
         screenWriter.setBackgroundColor(Terminal.Color.RED);
+        Key value;
+        if ((value=screen.readInput())!=null) System.out.println(value.getCharacter());
         screen.refresh();
     }
 
@@ -73,7 +77,7 @@ public final class Field {
                     screenWriter.setBackgroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
                     screenWriter.setForegroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
 
-                    screenWriter.drawString(col, row, "\u2588"); // █ BLOCK CHAR
+                    screenWriter.drawString(col, row, "\u2588"); // \u2588 █ BLOCK CHAR
                 }
             }
             row++;
@@ -87,4 +91,5 @@ public final class Field {
     public static int getHeight() {
         return height;
     }
+
 }
