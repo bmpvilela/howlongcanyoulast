@@ -69,7 +69,7 @@ public final class Field {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
+        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
         drawScores(gameTime, scores);
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -127,15 +127,135 @@ public final class Field {
     }
 
     /**
+     * Draw the game over screen
+     *
+     * @param gameTime Class that handles with every time registries of the game
+     * @param scores Class that defines the position of each score
+     */
+    public static void drawGameOver(GameTime gameTime, Scores scores) {
+
+        int rowVelocity = width + 1;
+
+        String[] gameOver =  {
+                "########     ###     ###   ### #######",
+                "##          ## ##    ## # # ## ##",
+                "##  ####   ##   ##   ##  #  ## #####",
+                "##    ##  ## ##  ##  ##     ## ##",
+                "######## ##       ## ##     ## #######",
+                "",
+                "######## ##       ## ####### #######",
+                "##    ##  ##     ##  ##      ##   ##",
+                "##    ##   ##   ##   #####   ######",
+                "##    ##    ## ##    ##      ##  ##",
+                "########     ###     ####### ##   ##"};
+
+        long lastTime = 0;
+
+        while (rowVelocity >= (width / 2) - (gameOver[0].length() / 2)) {
+
+            long currentTime = System.nanoTime();
+
+            if (currentTime > lastTime) {
+                rowVelocity--;
+
+                screen.clear();
+
+                drawMap(map);
+                // drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
+                drawScores(gameTime, scores);
+
+                screenWriter.setBackgroundColor(EnumColors.getColorById(0));
+                screenWriter.setForegroundColor(EnumColors.getColorById(7));
+
+                for (int i = 0; i < gameOver.length; i++) {
+                    screenWriter.drawString(rowVelocity, (height / 2 - (gameOver.length / 2)) + i, gameOver[i]);
+                }
+
+                screenWriter.setBackgroundColor(Terminal.Color.RED);
+                screen.refresh();
+
+                lastTime = currentTime + 10000000;
+
+            }
+        }
+
+    }
+
+    public static void drawStartGame() {
+        String[] ready = {"####### #######     ###     #####   ##   ##",
+                          "##   ## ##         ## ##    ##   #   ## ##",
+                          "######  #####     ##   ##   ##    #   ###",
+                          "##  ##  ##       ## ##  ##  ##   #    ###",
+                          "##   ## ####### ##       ## #####     ###"};
+
+        String[] go = {"######## ########",
+                      "##       ##    ##",
+                      "##  #### ##    ##",
+                      "##    ## ##    ##",
+                      "######## ########"};
+
+        int rowVelocity = width + 1;
+
+        long lastTime = 0;
+
+        String[] tempString = ready;
+
+        while (rowVelocity > -tempString[0].length()) {
+
+            long currentTime = System.nanoTime();
+
+            if (currentTime > lastTime) {
+                rowVelocity--;
+
+                screen.clear();
+
+                drawMap(map);
+
+                screenWriter.setBackgroundColor(EnumColors.getColorById(0));
+                screenWriter.setForegroundColor(EnumColors.getColorById(7));
+
+                for (int i = 0; i < tempString.length; i++) {
+                    screenWriter.drawString(rowVelocity, (height / 2 - (tempString.length / 2)) + i, tempString[i]);
+                }
+
+                screenWriter.setBackgroundColor(Terminal.Color.RED);
+                screen.refresh();
+
+                lastTime = currentTime + 10000000;
+            }
+
+            if (rowVelocity == -tempString[0].length()) {
+                rowVelocity = width + 1;
+
+                if(tempString.equals(go)) {
+                    break;
+                }
+
+                tempString = go;
+            }
+        }
+
+    }
+
+    /**
      * Draw the time of the game
      *
      * @param colPos Column position
      * @param rowPos Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
-    private static void drawTime(int colPos, int rowPos, String elapsedTime) {
-        screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-        screenWriter.setForegroundColor(EnumColors.getColorById(7));
+    private static void drawTime(int colPos, int rowPos, String elapsedTime, GameTime gameTime) {
+
+        int foregroundColor = 0;
+        int backgroundColor = 7;
+
+        if (gameTime.isLast10Seconds()) {
+            foregroundColor = 7;
+            backgroundColor = 2;
+        }
+
+        screenWriter.setBackgroundColor(EnumColors.getColorById(backgroundColor));
+        screenWriter.setForegroundColor(EnumColors.getColorById(foregroundColor));
 
         screenWriter.drawString(colPos, rowPos, elapsedTime);
     }

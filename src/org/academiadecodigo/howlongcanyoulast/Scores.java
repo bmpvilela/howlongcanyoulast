@@ -33,9 +33,9 @@ public class Scores {
                                         {(int) (Field.getWidth() * 0.75), 0}
                                         };
         } else if (totalPlayer == 3) {
-            playerScorePos = new int[][]{{(int) (Field.getWidth() * 0.25), 0},
-                                        {(int) (Field.getWidth() * 0.50), 0},
-                                        {(int) (Field.getWidth() * 0.75), 0}};
+            playerScorePos = new int[][]{{(int) (Field.getWidth() * 0.20), 0},
+                                        {(int) (Field.getWidth() * 0.45), 0},
+                                        {(int) (Field.getWidth() * 0.70), 0}};
         } else if (totalPlayer == 4) {
             playerScorePos = new int[][]{{(int) (Field.getWidth() * 0.15), 0},
                                         {(int) (Field.getWidth() * 0.35), 0},

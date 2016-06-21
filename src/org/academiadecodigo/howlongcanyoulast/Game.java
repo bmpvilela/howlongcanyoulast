@@ -23,11 +23,15 @@ public class Game {
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
 
+        Field.drawStartGame();
+
         gameTime.setStartTime();
 
-        while (true) {
+        while (!gameTime.isGameOver()) {
             Field.draw(gameTime, scores);
         }
+
+        Field.drawGameOver(gameTime, scores);
 
     }
 

@@ -24,6 +24,13 @@ public class GameTime {
     // HashMap that keeps the amount of time that each player has the flag
     private HashMap<String, Integer> playerFlagTime;
 
+    // Reference for the time game time
+    private long minutes;
+    private long seconds;
+
+    // Duration of the game in minutes
+    private int gameDuration = 0;
+
     /**
      * Constructor for the GameTime
      * Assign the position of the timer on the screen
@@ -31,7 +38,7 @@ public class GameTime {
      * @param totalPlayer Total player in the game
      */
     public GameTime(int totalPlayer) {
-        colPos = Field.getWidth() / 2 - "Time".length();
+        colPos = Field.getWidth() / 2 - ("##:##".length() / 2);
         rowPos = 1;
 
         playerFlagTime = new HashMap<>();
@@ -43,17 +50,17 @@ public class GameTime {
      * Get the time to be printed
      * Converts the elapsed time into minutes and seconds
      *
-     * @return Time formatted (Time: M:S)
+     * @return Time formatted (Time: MM:SS)
      */
     public String getGameTime() {
         // Updates the elapsed time
         elapsedTime = System.nanoTime() - startTime;
 
         // Convert the nanoTime to the minutes and seconds
-        long seconds = (elapsedTime / 1000000000) % 60;
-        long minutes =  TimeUnit.NANOSECONDS.toMinutes(elapsedTime);
+        seconds = (elapsedTime / 1000000000) % 60;
+        minutes =  TimeUnit.NANOSECONDS.toMinutes(elapsedTime);
 
-        return "Time: " + minutes + ":" + seconds;
+        return String.format("%02d", (gameDuration - minutes)) + ":" + String.format("%02d", (59 - seconds));
     }
 
     /**
@@ -83,6 +90,24 @@ public class GameTime {
         for (int i = 1; i <= totalPlayer; i++) {
             playerFlagTime.put("Player" + i, 0);
         }
+    }
+
+    /**
+     * Check if it is the last 10 seconds of the game
+     *
+     * @return
+     */
+    public boolean isLast10Seconds () {
+        return (gameDuration - minutes) == 0 && (5 - seconds) <= 10;
+    }
+
+    /**
+     * Check if the game its over
+     *
+     * @return
+     */
+    public boolean isGameOver() {
+        return (gameDuration - minutes) == 0 && (5 - seconds) == 0;
     }
 
     /**
