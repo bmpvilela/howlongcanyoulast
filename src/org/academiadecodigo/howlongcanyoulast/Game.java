@@ -23,7 +23,10 @@ public class Game {
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
 
-        Field.drawStartGame();
+        int stopAnimationAt = GameTextType.getText(GameTextType.TIMEOUT)[0].length();
+
+        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
+        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
 
         gameTime.setStartTime();
 
@@ -31,8 +34,8 @@ public class Game {
             Field.draw(gameTime, scores);
         }
 
-        Field.drawGameOver(gameTime, scores);
-
+        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
+        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
     }
 
     public void start(){

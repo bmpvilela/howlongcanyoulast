@@ -98,7 +98,7 @@ public class GameTime {
      * @return
      */
     public boolean isLast10Seconds () {
-        return (gameDuration - minutes) == 0 && (5 - seconds) <= 10;
+        return (gameDuration - minutes) == 0 && (59 - seconds) <= 10;
     }
 
     /**
@@ -107,7 +107,7 @@ public class GameTime {
      * @return
      */
     public boolean isGameOver() {
-        return (gameDuration - minutes) == 0 && (5 - seconds) == 0;
+        return (gameDuration - minutes) == 0 && (59 - seconds) == 0;
     }
 
     /**

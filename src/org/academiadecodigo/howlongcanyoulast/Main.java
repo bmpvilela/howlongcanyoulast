@@ -10,7 +10,7 @@ public class Main {
         //TODO Choose client or server by args
 
         Game game = new Game(100,25);
-        game.init(3);
+        game.init(4);
         game.start();
 
     }
