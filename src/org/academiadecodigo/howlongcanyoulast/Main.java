@@ -1,6 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast;
 
 import org.academiadecodigo.howlongcanyoulast.client.Client;
+import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
 
 /**
@@ -12,7 +13,9 @@ public class Main {
 
         //TODO Choose client or server by args
 
-        MazeGenerator.GenerateMap();
+
+        MazeGenerator mz = new MazeGenerator(80,30, DificultyType.BABY);
+        mz.GenerateMap();
         Game game = new Game(100, 25);
         game.init();
         game.start();

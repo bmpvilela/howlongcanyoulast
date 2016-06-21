@@ -9,21 +9,21 @@ public class Game {
     private int rows;
     private Field field;
 
-    public Game (int cols, int rows){
+    public Game(int cols, int rows) {
 
-        this.cols=cols;
+        this.cols = cols;
         this.rows = rows;
 
     }
 
-    public void init(){
+    public void init() {
 
         Field.init("map2.txt");
         Field.draw();
 
     }
 
-    public void start(){
+    public void start() {
 
     }
 
