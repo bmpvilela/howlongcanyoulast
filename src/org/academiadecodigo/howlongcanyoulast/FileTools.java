@@ -87,13 +87,6 @@ public class FileTools {
             bw = new BufferedWriter(fw);
 
 
-//            int i = 0;
-//            while (toWrite[i] != null) {
-//                bw.write(toWrite[i]);
-//                bw.newLine();
-//                i++;
-//            }
-
 
             for (int i = 0; i < toWrite.length ; i++) {
                 bw.write(toWrite[i]);

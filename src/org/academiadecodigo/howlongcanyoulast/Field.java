@@ -38,8 +38,6 @@ public final class Field {
         // Set field size
         Field.width = map[0].length();
         Field.height = map.length;
-        System.out.println(Field.height);
-        System.out.println(Field.width);
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -50,6 +48,7 @@ public final class Field {
         screenWriter.setForegroundColor(Terminal.Color.WHITE);
 
         screen.startScreen();
+
 
     }
 
