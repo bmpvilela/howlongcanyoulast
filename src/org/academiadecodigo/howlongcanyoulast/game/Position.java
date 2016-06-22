@@ -32,4 +32,17 @@ public class Position {
     public void setRow(int row) {
         this.row = row;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Position position = (Position) o;
+
+        if (col != position.col) return false;
+        if (row != position.row) return false;
+
+        return true;
+    }
 }
