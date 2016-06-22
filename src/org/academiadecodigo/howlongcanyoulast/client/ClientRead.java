@@ -10,57 +10,40 @@ import java.util.ArrayList;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class Client {
+public class ClientRead {
 
    // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
 
-    public Client(int port){
+    public ClientRead(int port){
         try {
             clientSocket = new DatagramSocket(port);
 
         } catch (SocketException e) {
             System.out.println("Fail to create socket");
         }
-
-
     }
-     /*   try {
-            //TODO change InetAdress to the server one
-           // clientSocket = new Socket(InetAddress.getByName("192.168.1.21"), port);
 
-        } catch (IOException e) {
-            System.out.println("Could not reach server");
-        }
-    }*/
 
     public void start(){
 
-        Thread t = new Thread(new KeyboardClientInput(clientSocket));
+        Thread t = new Thread(new ClientWrite(clientSocket));
         t.start();
 
-        while(clientSocket.isConnected()){
+        while(true){
             display(receiveFromServer());
-        }
-        try {
-            if(clientSocket != null) {
-                clientSocket.close();
-            }
-        } catch (IOException e) {
-            System.out.println("fail to close socket");
         }
 
     }
 
     public byte[] receiveFromServer() {
-        byte[] serverData = new byte[1024];
-
+        byte[] serverData = new byte[1000];
         try {
             // Create and receive UDP datagram packet from the socket
             DatagramPacket receivePacket = new DatagramPacket(serverData, serverData.length);
             clientSocket.receive(receivePacket); // blocks while packet not received
 
-            System.out.println(new String(receivePacket.getData()));
+            //System.out.println(serverData);
 
         } catch (SocketException e) {
             e.printStackTrace();
@@ -72,9 +55,9 @@ public class Client {
 
 
     public void display(byte[] serverData){
-        System.out.println(serverData.toString());
-
+        System.out.println(serverData);
     }
+
 
     public byte[] byteToSend(ArrayList<Byte> data){
         byte[] clientData;
