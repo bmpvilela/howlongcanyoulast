@@ -23,6 +23,15 @@ public class Game {
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
 
+        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
+
+        // TODO remove thread sleep
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         int stopAnimationAt = GameTextType.getText(GameTextType.TIMEOUT)[0].length();
 
         Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);

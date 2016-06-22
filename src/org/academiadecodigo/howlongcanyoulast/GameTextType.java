@@ -29,6 +29,9 @@ public enum GameTextType {
             case GO:
                 return getGo();
 
+            case WAITING:
+                return getWaiting();
+
             default:
                 System.out.println("Enum TxtType return null");
                 return null;
@@ -79,5 +82,19 @@ public enum GameTextType {
                             "##  #### ##    ##",
                             "##    ## ##    ##",
                             "######## ########"};
+    }
+
+    /**
+     * Getter
+     *
+     * @return
+     */
+    private static String[] getWaiting() {
+        return new String[]{
+                "##           ##     ###     ####### ######## ####### ###    ## ########",
+                " ##    #    ##     ## ##      ###      ##      ###   ## #   ## ##      ",
+                "  ##  ###  ##     ##   ##     ###      ##      ###   ##  #  ## ##  ####",
+                "   #### ####     ## ##  ##    ###      ##      ###   ##   # ## ##    ##",
+                "    ##   ##     ##       ## #######    ##    ####### ##    ### ########"};
     }
 }

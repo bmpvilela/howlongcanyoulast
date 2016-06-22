@@ -127,6 +127,24 @@ public final class Field {
     }
 
     /**
+     * Draw the text on the center of the screen
+     */
+    public static void simpleDraw(String[] text) {
+        screen.clear();
+
+        screenWriter.setBackgroundColor(EnumColors.getColorById(0));
+        screenWriter.setForegroundColor(EnumColors.getColorById(7));
+
+        // Draw all string of the array
+        for (int i = 0; i < text.length; i++) {
+            screenWriter.drawString((width / 2) - GameTextType.getText(GameTextType.WAITING)[0].length() / 2, (height / 2 - (text.length / 2)) + i, text[i]);
+        }
+
+        screenWriter.setBackgroundColor(Terminal.Color.RED);
+        screen.refresh();
+    }
+
+    /**
      * Draw the time of the game
      *
      * @param colPos Column position
