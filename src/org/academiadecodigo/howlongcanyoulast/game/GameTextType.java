@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.game;
 
 /**
  * Created by andre on 21/06/2016.

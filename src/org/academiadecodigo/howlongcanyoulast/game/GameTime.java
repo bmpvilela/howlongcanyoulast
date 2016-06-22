@@ -1,4 +1,6 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.game;
+
+import org.academiadecodigo.howlongcanyoulast.utilities.Field;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
