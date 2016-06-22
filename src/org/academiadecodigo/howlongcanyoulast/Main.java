@@ -12,13 +12,10 @@ public class Main {
     public static void main(String[] args) {
 
         //TODO Choose client or server by args
-
-
         MazeGenerator mz = new MazeGenerator(80,30, DificultyType.NORMAL);
         mz.GenerateMap();
         Game game = new Game(100, 25);
-        game.init();
-        game.start();
+        game.init(4);
     }
 
 }
