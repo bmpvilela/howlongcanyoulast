@@ -30,8 +30,7 @@ public class Scores {
     private void positioningScores(int totalPlayer)  {
         if (totalPlayer == 2) {
             playerScorePos = new int[][]{{(int) (Field.getWidth() * 0.25), 0},
-                                        {(int) (Field.getWidth() * 0.75), 0}
-                                        };
+                                        {(int) (Field.getWidth() * 0.75), 0}};
         } else if (totalPlayer == 3) {
             playerScorePos = new int[][]{{(int) (Field.getWidth() * 0.20), 0},
                                         {(int) (Field.getWidth() * 0.45), 0},

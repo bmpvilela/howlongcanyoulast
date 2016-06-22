@@ -30,14 +30,15 @@ public class Game {
 
         // TODO remove thread sleep
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        int stopAnimationAt = GameTextType.getText(GameTextType.TIMEOUT)[0].length();
-
+        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
         Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
+
+        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
         Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
 
         gameTime.setStartTime();

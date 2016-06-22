@@ -42,8 +42,8 @@ public final class Field {
         screen = TerminalFacade.createScreen();
 
         // Set field size
-        Field.width = map[0].length();
-        Field.height = map.length;
+        width = map[0].length();
+        height = map.length;
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -134,7 +134,7 @@ public final class Field {
 
         // Draw all string of the array
         for (int i = 0; i < text.length; i++) {
-            screenWriter.drawString((width / 2) - GameTextType.getText(GameTextType.WAITING)[0].length() / 2, (height / 2 - (text.length / 2)) + i, text[i]);
+            screenWriter.drawString((width / 2) - text[0].length() / 2, (height / 2 - (text.length / 2)) + i, text[i]);
         }
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -172,7 +172,7 @@ public final class Field {
     public static void animation(String[] text, int stopAnimationAt) {
         // Start point of the text
         // Used to move text width
-        int rowVelocity = width + 1;
+        int rowVelocity = 100;
 
         long lastTime = 0;
 
