@@ -26,17 +26,18 @@ public final class Field {
     /**
      * Initializes the Screen
      *
-     * @param width  screen width
-     * @param height screen height
+     *
      */
-    public static void init(int width, int height) {
+    public static void init(String path) {
+
+        map = FileTools.fileRead(path);
 
         // Create the GUI
         screen = TerminalFacade.createScreen();
 
         // Set field size
-        Field.width = width;
-        Field.height = height;
+        Field.width = map[0].length();
+        Field.height = map.length;
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -48,7 +49,7 @@ public final class Field {
 
         screen.startScreen();
 
-        map = FileTools.fileRead("map.txt");
+
     }
 
     /**

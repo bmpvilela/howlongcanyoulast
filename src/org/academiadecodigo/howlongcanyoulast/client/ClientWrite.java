@@ -4,19 +4,22 @@ package org.academiadecodigo.howlongcanyoulast.client;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.ScreenWriter;
-import com.sun.java.swing.plaf.gtk.GTKConstants;
+//import com.sun.java.swing.plaf.gtk.GTKConstants;
 import com.sun.org.apache.xpath.internal.operations.String;
 import org.academiadecodigo.howlongcanyoulast.utilities.Field;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 
 
 /**
  * Created by codecadet on 20/06/16.
  */
-public class KeyboardClientInput implements Runnable  {
+public class ClientWrite implements Runnable  {
     //TODO input()
     //TODO sendToServer()
     BufferedOutputStream out = null;
@@ -24,8 +27,9 @@ public class KeyboardClientInput implements Runnable  {
 
 
 
-    public KeyboardClientInput(Socket clientSocket){
+    public ClientWrite(DatagramSocket clientSocket){
         this.clientSocket = clientSocket;
+        packet = new DatagramPacket(sendBuffer,sendBuffer.length, InetAddress.getByName("127.0.0.1") ,port);
     }
 
     @Override
@@ -39,6 +43,7 @@ public class KeyboardClientInput implements Runnable  {
 
         while(true) {
             Key value = Field.getScreen().readInput();
+            clientSocket.send(packet);
             if(value != null){
                 System.out.println(value.getCharacter());
                 try {

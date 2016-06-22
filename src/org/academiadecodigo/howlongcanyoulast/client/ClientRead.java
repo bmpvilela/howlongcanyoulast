@@ -4,8 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 
 /**
@@ -13,19 +12,27 @@ import java.util.ArrayList;
  */
 public class Client {
 
-    private Socket clientSocket = null;
+   // private Socket clientSocket = null;
+    private DatagramSocket clientSocket =null;
 
     public Client(int port){
         try {
+            clientSocket = new DatagramSocket(port);
+
+        } catch (SocketException e) {
+            System.out.println("Fail to create socket");
+        }
+
+
+    }
+     /*   try {
             //TODO change InetAdress to the server one
-            clientSocket = new Socket(InetAddress.getByName("192.168.1.21"), port);
+           // clientSocket = new Socket(InetAddress.getByName("192.168.1.21"), port);
 
         } catch (IOException e) {
             System.out.println("Could not reach server");
         }
-    }
-
-
+    }*/
 
     public void start(){
 
@@ -45,18 +52,20 @@ public class Client {
 
     }
 
-    public byte[] receiveFromServer(){
-        byte[] serverData = new byte[1000];
+    public byte[] receiveFromServer() {
+        byte[] serverData = new byte[1024];
 
         try {
+            // Create and receive UDP datagram packet from the socket
+            DatagramPacket receivePacket = new DatagramPacket(serverData, serverData.length);
+            clientSocket.receive(receivePacket); // blocks while packet not received
 
-                BufferedInputStream in = new BufferedInputStream(clientSocket.getInputStream());
+            System.out.println(new String(receivePacket.getData()));
 
-                in.read(serverData);
-
-
+        } catch (SocketException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println(" fail to receive data from server");
+            e.printStackTrace();
         }
         return serverData;
     }
