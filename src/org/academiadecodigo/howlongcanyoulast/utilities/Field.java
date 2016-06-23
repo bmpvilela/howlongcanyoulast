@@ -76,8 +76,40 @@ public final class Field {
         screen.clear();
 
         drawMap(map);
+        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
+        drawScores(gameTime, scores);
+
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
+    }
+
+    /**
+     * Position and drawing the score information
+     *
+     * @param gameTime Times for each player
+     * @param scores Position of each score
+     */
+    public static void drawScores(GameTime gameTime, Scores scores) {
+        HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
+//TODO Change to be more automatic
+        for (int i = 0; i < scores.getScores().length; i++) {
+            score(scores.getScores()[i][0], scores.getScores()[i][1],
+                    "Player" + (i + 1) + ": " + playersTimes.get("Player" + (i + 1)));
+        }
+    }
+
+    /**
+     * Draw the score display in a given position
+     *
+     * @param colPos Column position
+     * @param rowPos Row position
+     * @param playerInfo Player name + time flag
+     */
+    private static void score(int colPos, int rowPos, String playerInfo) {
+        screenWriter.setBackgroundColor(EnumColors.getColorById(7));
+        screenWriter.setForegroundColor(EnumColors.getColorById(0));
+
+        screenWriter.drawString(colPos, rowPos, playerInfo);
     }
 
     public static void drawMap(String[] map){
