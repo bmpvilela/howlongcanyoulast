@@ -12,7 +12,7 @@ public class Tester {
         MazeGenerator mz = new MazeGenerator(80,30, DificultyType.BABY);
         mz.GenerateMap();
         Game game = new Game(100, 25);
-        game.init();
+        game.init(4);
         game.start();
         ClientRead clientRead = new ClientRead(8080);
         clientRead.start();
