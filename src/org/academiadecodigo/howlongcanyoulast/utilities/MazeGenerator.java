@@ -2,7 +2,7 @@ package org.academiadecodigo.howlongcanyoulast.utilities;
 
 
 import org.academiadecodigo.howlongcanyoulast.EnumColors;
-import org.academiadecodigo.howlongcanyoulast.FileTools;
+import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -47,16 +47,12 @@ public class MazeGenerator {
             map = new String[30];
         }
 
-
-
     }
-
 
     /**
      * Generate the map, will have a 2 tile border up top, 1 everywhere else, 4 player capacity,
      */
     public void GenerateMap(){
-
 
         for (int i = 0; i < cells.length; i++) {
 
@@ -64,43 +60,50 @@ public class MazeGenerator {
 
                 //Generate Borders
                 if(i < 2 || j == 0 || i > cells.length-2 || j == cells[i].length-1){
-                    cells[i][j] += EnumColors.BLUE.ordinal(); //Color blue for the border
+                    cells[i][j] = EnumColors.BLUE.ordinal(); //Color blue for the border
 
-                //Set the players positions switch the 0 for player cursor
-                } else if((i < 3 && j < 3) || (i> cells.length-3 && j < 3) || (i<3 && j>cells[i].length-4) || (i>cells.length-3 && j>cells[i].length-4) ){
-                    cells[i][j] += EnumColors.GREEN.ordinal(); // Empty square change for the player icon
+                //Set the players positions
+                } else if((i < 3 && j < 3)
+                        || (i> cells.length-3 && j < 3)
+                        || (i<3 && j>cells[i].length-4)
+                        || (i>cells.length-3 && j>cells[i].length-4) ){
+                    cells[i][j] = EnumColors.GREEN.ordinal(); // Green for the players
+
                 //Set the outside path
                 } else if(i<3 || j<3 || i>cells.length-3 || j>cells[i].length-4){
-                    cells[i][j] += EnumColors.BLACK.ordinal();
+                    cells[i][j] = EnumColors.BLACK.ordinal(); // "Empty" cell
 
                 //Set the center
                 } else if(i> cells.length/2-4 && j > cells[i].length/2-4 && i < cells.length/2+4 && j <cells[i].length/2+4 ){
-                    cells[i][j] += EnumColors.MAGENTA.ordinal();
+                    cells[i][j] = EnumColors.MAGENTA.ordinal(); // Currently the center, will be replaced to black as well
                 }
 
 
                 else {
-                    cells[i][j] += generateMaze(i,j);
+                    cells[i][j] = generateMaze(i,j);
 
                 }
             }
         }
 
+        validateMap();
         saveFile();
-
 
     }
 
     private int generateMaze(int col, int row) {
 
+        //make sure there are at least 2 walls
         if(cells[col][row-1] == EnumColors.WHITE.ordinal() && cells[col][row-2] == EnumColors.BLACK.ordinal() ){
             return EnumColors.WHITE.ordinal();
         }
+        //make sure there are at least 2 wide passways
         if(cells[col][row-1] == EnumColors.BLACK.ordinal() && cells[col][row-2] == EnumColors.WHITE.ordinal()){
             return EnumColors.BLACK.ordinal();
         }
 
 
+        //check how many walls there are in the vicinity
         switch (howManyWalls(col,row)){
 
             case 0:
@@ -119,6 +122,7 @@ public class MazeGenerator {
 
     }
 
+    //how many walls there are in the vicinity
     private int howManyWalls(int col, int row) {
 
         int howMany = 0;
@@ -127,16 +131,17 @@ public class MazeGenerator {
             for (int j = row-1; j <=row+1 ; j++) {
 
                 if(i == col && j == row || i == col-1 && j == row-1 || i == col+1 && j == row-1 || i == col-1 && j == row+1){ //Don't want to compare to myself or to the corners
-
                 } else if(cells[i][j] == EnumColors.WHITE.ordinal()){
                     howMany++;
                 }
-
             }
         }
         return howMany;
     }
 
+
+
+    //save the file
     private void saveFile(){
 
         String[] toSave = new String[cells.length];
@@ -153,8 +158,24 @@ public class MazeGenerator {
 
     }
 
+    //set the difficulty
     private void setDifficulty(int difficulty){
             this.difficulty = difficulty;
+    }
+
+    private void validateMap(){
+
+
+        for (int i = 4; i < cells.length-4 ; i++) {
+            for (int j = 3; j <cells[i].length-3 ; j++) {
+
+                if(howManyWalls(i,j) > 2){
+                    cells[i][j] = EnumColors.WHITE.ordinal();
+                }
+
+            }
+        }
+
     }
 
 

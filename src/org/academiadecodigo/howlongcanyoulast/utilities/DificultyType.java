@@ -8,7 +8,6 @@ public enum DificultyType {
     BABY,
     EASY,
     NORMAL,
-    HARD,
     IMPOSSIBRU;
 
 

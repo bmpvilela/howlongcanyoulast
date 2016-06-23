@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -61,6 +61,37 @@ public class FileTools {
         } finally {
             return lenght;
         }
+    }
+
+    public static int[] gridSize(String fileName){
+
+        int[] temp = new int[2];
+        int cols,rows=0;
+        String line=null;
+
+        BufferedReader br = null;
+
+        try {
+
+            File theFile = new File(fileName);
+            if(!theFile.exists()) { theFile.createNewFile(); }
+
+            FileReader fileReader = new FileReader(theFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while ((line=bufferedReader.readLine()) != null) {
+                temp[0] = line.length()-1;
+                rows++;
+            }
+            temp[1] = rows;
+
+            bufferedReader.close();
+
+        } catch (Exception e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return temp;
     }
 
     /**
