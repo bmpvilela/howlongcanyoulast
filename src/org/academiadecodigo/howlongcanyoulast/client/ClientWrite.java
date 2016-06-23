@@ -25,12 +25,12 @@ public class ClientWrite implements Runnable  {
 
 
     public ClientWrite(DatagramSocket clientSocket){
-       // this.clientSocket = clientSocket;
-        try {
-            this.clientSocket = new DatagramSocket(8085);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        this.clientSocket = clientSocket;
+//        try {
+//            this.clientSocket = new DatagramSocket();
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -39,13 +39,16 @@ public class ClientWrite implements Runnable  {
         while(true) {
             Key value = Field.getScreen().readInput();
             if(value != null){
-                System.out.println(value.getCharacter());
-                byte[] sendBuffer = {convertToByte(value.getCharacter())};
+                System.out.println((byte)value.getCharacter());
+
+                byte[] sendBuffer = {(byte)value.getCharacter()};
                 DatagramPacket packet;
 
                 try {
-                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, InetAddress.getByName("127.0.0.1") ,8080);
+                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, InetAddress.getByName("192.168.1.21") ,8080);
+                    System.out.println("waiting to send");
                     clientSocket.send(packet);
+                    System.out.println("sent");
                 } catch (IOException e) {
                     System.out.println("Fail to send packet");
                 }
