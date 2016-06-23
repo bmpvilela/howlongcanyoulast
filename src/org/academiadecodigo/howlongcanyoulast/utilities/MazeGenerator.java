@@ -1,8 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.utilities;
 
 
-import org.academiadecodigo.howlongcanyoulast.EnumColors;
-import org.academiadecodigo.howlongcanyoulast.FileTools;
+import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 /**
  * Created by codecadet on 20/06/16.
