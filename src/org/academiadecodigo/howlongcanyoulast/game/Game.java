@@ -1,6 +1,5 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
-import org.academiadecodigo.howlongcanyoulast.server.Server;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ public class Game {
     //TODO colisionDetector() //TODO
     //TODO position() //TODO
 
-    private Server server;
     private ConcurrentHashMap<String,Position> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
     private int numPlayers;
@@ -37,21 +35,10 @@ public class Game {
 
         storeWallsLocations(map);
 
-        //start server thread
-        server = new Server();
-        Thread tServer = new Thread(server);
-        tServer.start();
-
-        //wait for min number of players
-        while ((numPlayers = server.getClientNames().length) <= 2){
-            // do nothing
-        }
-
         System.out.println("-- All Players Connected --");
 
         //add players name (key) and position to HashMap
         positionsList = new ConcurrentHashMap<>();
-        playerNames = server.getClientNames();
         for (String name: playerNames){
             positionsList.put(name,new Position());
         }
