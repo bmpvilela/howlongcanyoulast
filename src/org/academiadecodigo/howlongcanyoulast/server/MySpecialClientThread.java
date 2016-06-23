@@ -52,8 +52,6 @@ public class MySpecialClientThread implements Runnable {
                     server.clientList.remove(this);
                     break;
                 }
-                // Commands server to send the byte array to all clients
-                server.getClientsName(bytes, name);
             }
 
         } catch (IOException e) {
