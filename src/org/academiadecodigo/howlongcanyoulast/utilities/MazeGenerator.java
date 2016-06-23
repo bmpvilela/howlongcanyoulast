@@ -49,7 +49,7 @@ public class MazeGenerator {
     }
 
     /**
-     * Generate the map, will have a 2 tile border up top, 1 everywhere else, 4 player capacity,
+     * Generate the map, will have a 2 tile border up top, 1 everywhere else, 4 player capacity, the center will be isolated
      */
     public void GenerateMap(){
 
