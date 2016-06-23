@@ -1,6 +1,8 @@
 package org.academiadecodigo.howlongcanyoulast;
 
-import org.academiadecodigo.howlongcanyoulast.game.Game;
+import org.academiadecodigo.howlongcanyoulast.client.Client;
+import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
+import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
 
 /**
  * Created by brunovilela on 19/06/16.
@@ -11,20 +13,12 @@ public class Main {
 
         //TODO Choose client or server by args
 
-//        int[] size = FileTools.gridSize("map.txt");
-//
-//        System.out.println(size[0]+":"+size[1]);
-//
-//        Game game = new Game(size[0],size[1]);
-//        game.init();
-//        game.start();
 
-        Game game = new Game();
+        MazeGenerator mz = new MazeGenerator(80,30, DificultyType.NORMAL);
+        mz.GenerateMap();
+        Game game = new Game(100, 25);
         game.init();
-
-
-        System.out.println(game.assemblePlayersInfo());
-
+        game.start();
     }
 
 }
