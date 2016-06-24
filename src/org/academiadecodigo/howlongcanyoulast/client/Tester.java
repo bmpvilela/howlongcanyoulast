@@ -13,6 +13,7 @@ public class Tester {
         Game game = new Game(100, 25);
         game.init(4);
         game.start();
+
         ClientRead clientRead = new ClientRead(8080);
         clientRead.start();
     }

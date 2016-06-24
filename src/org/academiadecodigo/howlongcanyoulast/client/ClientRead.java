@@ -14,6 +14,7 @@ public class ClientRead {
 
    // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
+    private String playersPositions;
 
     public ClientRead(int port){
         try {
@@ -72,8 +73,4 @@ public class ClientRead {
         return clientData;
 
     }
-
-    //TODO receiveFromServer()
-    //TODO display()
-
 }

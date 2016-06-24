@@ -1,15 +1,9 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-
 import com.googlecode.lanterna.input.Key;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.ScreenWriter;
-import com.sun.java.swing.plaf.gtk.GTKConstants;
-import com.sun.org.apache.xpath.internal.operations.String;
 import org.academiadecodigo.howlongcanyoulast.Scores;
 import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.*;
 
@@ -19,10 +13,10 @@ import java.net.*;
  */
 public class ClientWrite implements Runnable  {
 
+    private String playersPositions;
     DatagramSocket clientSocket = null;
     Scores score;
     GameTime gameTime;
-
 
     public ClientWrite(DatagramSocket clientSocket){
 
@@ -47,6 +41,8 @@ public class ClientWrite implements Runnable  {
 
         while(true) {
             Key value = ClientBoard.getKey();
+
+            if (playersPositions != null) ClientBoard.setAllPlayersPositions(dividPositionsData(playersPositions));
             ClientBoard.draw(gameTime, score);
 
             if(value != null){
@@ -86,5 +82,26 @@ public class ClientWrite implements Runnable  {
         }
     }
 
+    public void setPlayersPositions(String playersPositions){
+        this.playersPositions = playersPositions;
+    }
 
+    //TODO best location for method? here or clientboard
+    private String[] dividPositionsData(String playersPositions){
+
+        String[] splitedPlayers = playersPositions.split("\\s+"); //1st split by spaces (IP1:x:y IP2:x:y ...)
+        String[] tempData = new String[3];
+        String[] allData = new String[12]; //for store 2nd split by : (IP1 and x and y)
+
+        int i = 0;
+        for (int count = 0; count < splitedPlayers.length; count++) {
+            tempData = splitedPlayers[count].split("[.]"); //2nd split
+
+            for (int tempDataCount = 0; tempDataCount < tempData.length; tempDataCount++)
+                allData[i] = tempData[tempDataCount]; //store each split
+
+            i++;
+        }
+    return allData;
+    }
 }
