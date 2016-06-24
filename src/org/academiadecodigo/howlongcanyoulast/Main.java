@@ -19,8 +19,8 @@ public class Main {
         Game game = new Game(50, 15);
         game.init(4);
 
-        UDPServer server = new UDPServer(game);
-        server.run();
+//        UDPServer server = new UDPServer(game);
+//        server.run();
 
     }
 
