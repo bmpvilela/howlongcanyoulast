@@ -1,6 +1,6 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
-import org.academiadecodigo.howlongcanyoulast.utilities.Field;
+import org.academiadecodigo.howlongcanyoulast.client.ClientBoard;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +40,7 @@ public class GameTime {
      * @param totalPlayer Total player in the game
      */
     public GameTime(int totalPlayer) {
-        colPos = Field.getWidth() / 2 - ("##:##".length() / 2);
+        colPos = ClientBoard.getWidth() / 2 - ("##:##".length() / 2);
         rowPos = 1;
 
         playerFlagTime = new HashMap<>();
