@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.server;
 
+import org.academiadecodigo.howlongcanyoulast.game.Game;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -13,26 +15,29 @@ import java.util.concurrent.Executors;
 /**
  * Created by codecadet on 22/06/16.
  */
-public class UDPServer implements Runnable{
+public class UDPServer implements Runnable {
 
     private static final int MAX_PLAYERS = 4;
-    private String allPlayerPositions;
+    private Game game;
 
-    private DatagramSocket serverSocket = null;
-    private ExecutorService pool;
-    private HashMap<InetAddress, ClientThread> clientList;
+    public UDPServer(Game game){
+        this.game = game;
+    }
+
 
     @Override
     public void run() {
 
-        serverSocket = null;
-        pool = Executors.newFixedThreadPool(4);
-        clientList = new HashMap<>();
+        DatagramSocket serverSocket = null;
+
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+
+        HashMap<InetAddress, ClientThread> clientList = new HashMap<>();
 
 
         try {
             serverSocket = new DatagramSocket(8080);
-            byte[] data = new byte[1];
+            byte[] data = new byte[5];
 
             while(true) {
 
@@ -45,6 +50,7 @@ public class UDPServer implements Runnable{
 
                     ClientThread ct = new ClientThread(serverSocket, receivePacket);
                     clientList.put(receivePacket.getAddress(), ct);
+                    game.setName("" + receivePacket.getAddress());
                     pool.submit(ct);
 
                 } else if (clientList.containsKey(receivePacket.getAddress()) &&
@@ -73,7 +79,7 @@ public class UDPServer implements Runnable{
 //    public static void main(String[] args) {
 //
 //        UDPServer server = new UDPServer();
-//        server.start();
+//        server.run();
 //
 //    }
 
@@ -101,8 +107,6 @@ public class UDPServer implements Runnable{
                 packet = new DatagramPacket("answer\n".getBytes(), "answer\n".getBytes().length, packet.getAddress(), packet.getPort());
                 this.socket.send(packet);
 
-                System.out.println();
-
                 running = false;
 
             } catch (IOException e) {
@@ -114,10 +118,6 @@ public class UDPServer implements Runnable{
         public boolean isRunning() {
             return running;
         }
-    }
-
-    public void setAllPlayerPositions(String allPositions){
-        this.allPlayerPositions = allPositions;
     }
 
 }
