@@ -40,7 +40,8 @@ public class Game {
         this.rows = rows;
         playerNames = new String[4];
         myServer = new UDPServer(this);
-        new Thread(myServer);
+        new Thread(myServer).start();
+
         playerStartPositions = new LinkedList<>();
     }
 
@@ -48,7 +49,14 @@ public class Game {
         // Field.draw();
         // Field.init(cols,rows);
 
+        positionsList = new ConcurrentHashMap<>();
+
+        String[] map = FileTools.fileRead("map2.txt");
+
+        storeInitialInfo(map);
+
         Field.init("map2.txt");
+
 
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
@@ -85,22 +93,6 @@ public class Game {
     /**
      * Init game
      */
-
-    public void init() {
-
-        //TODO FOR TEST REMOVE
-        String[] map = FileTools.fileRead("map.txt");
-        //TODO ---------
-
-        storeInitialInfo(map);
-
-        System.out.println("-- All Players Connected --");
-
-        //add players name (key) and position to HashMap
-        positionsList = new ConcurrentHashMap<>();
-
-
-    }
 
 
     /**
@@ -206,20 +198,26 @@ public class Game {
 
     private void storeInitialInfo(String[] str) {
         wallsLocations = new ArrayList<>();
-        Position pos;
         String tempString;
 
-        for (int rows = 0; rows < wallsLocations.size(); rows++) {
+
+        for (int rows = 0; rows < str.length; rows++) {
             tempString = str[rows];
             for (int cols = 0; cols < tempString.length(); cols++) {
-                if (tempString.charAt(cols) == 1 || tempString.charAt(cols) == 7){
+
+                if (tempString.charAt(cols) == '1' || tempString.charAt(cols) == '7'){
                     wallsLocations.add(new Position(cols, rows));
-                } else if(tempString.charAt(cols) == EnumColors.GREEN.ordinal()){
+                } if(tempString.charAt(cols) == '4'){
                     playerStartPositions.add(new Position(cols,rows));
 
                 }
             }
         }
+
+        System.out.println(playerStartPositions.size());
+        System.out.println(wallsLocations.size());
+
+
     }
 
 
