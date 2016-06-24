@@ -14,6 +14,7 @@ public class ClientRead implements Runnable{
 
    // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
+    private String playersPositions;
 
     public ClientRead(DatagramSocket clientSocket){
         this.clientSocket = clientSocket;

@@ -32,6 +32,8 @@ public final class ClientBoard {
     // Screen wrapper that preserves default options
     private static ScreenWriter screenWriter;
 
+    private static String[] allPlayersPositions;
+
     //This class is not supposed to be instantiated
     private ClientBoard() {
     }
@@ -78,6 +80,8 @@ public final class ClientBoard {
         drawMap(map);
         drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
         drawScores(gameTime, scores);
+
+
 
         key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -225,4 +229,8 @@ public final class ClientBoard {
     }
 
     public static Key getKey() {return key; }
+
+    public static void setAllPlayersPositions(String[] positions){
+        allPlayersPositions = positions;
+    }
 }

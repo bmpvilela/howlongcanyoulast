@@ -21,7 +21,7 @@ public class Game {
 
     private int cols;
     private int rows;
-    private Field field;
+
     private GameTime gameTime;
     private Scores scores;
 
@@ -39,15 +39,12 @@ public class Game {
         this.cols = cols;
         this.rows = rows;
         playerNames = new String[4];
-//        myServer = new UDPServer(this);
-//        new Thread(myServer).start();
-
+        myServer = new UDPServer(this);
+        new Thread(myServer);
         playerStartPositions = new LinkedList<>();
     }
 
-    public void init(int totalPlayers) {
-        // Field.draw();
-        // Field.init(cols,rows);
+    public void init(int totalPlayers){
 
         positionsList = new ConcurrentHashMap<>();
 
@@ -213,11 +210,6 @@ public class Game {
                 }
             }
         }
-
-        System.out.println(playerStartPositions.size());
-        System.out.println(wallsLocations.size());
-
-
     }
 
 
