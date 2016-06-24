@@ -17,7 +17,7 @@ public class ClientRead {
 
     public ClientRead(int port){
         try {
-            clientSocket = new DatagramSocket(port);
+            clientSocket = new DatagramSocket();
 
         } catch (SocketException e) {
             System.out.println("Fail to create socket");
@@ -33,15 +33,19 @@ public class ClientRead {
         while(true){
             display(receiveFromServer());
         }
-
     }
 
+
     public byte[] receiveFromServer() {
+
+        //Don't create everytime the receiveFromServer is called
         byte[] serverData = new byte[1000];
         try {
             // Create and receive UDP datagram packet from the socket
             DatagramPacket receivePacket = new DatagramPacket(serverData, serverData.length);
+            System.out.println("waiting to receive from server");
             clientSocket.receive(receivePacket); // blocks while packet not received
+            System.out.println("received");
 
             //System.out.println(serverData);
 
