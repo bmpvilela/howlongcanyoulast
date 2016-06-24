@@ -1,10 +1,14 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
+import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
+import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.academiadecodigo.howlongcanyoulast.Scores;
@@ -21,10 +25,11 @@ public class Game {
     private GameTime gameTime;
     private Scores scores;
 
-    private ConcurrentHashMap<String,Position> positionsList;   //Players positions - Key(String) is Player Name
+    private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
     private int numPlayers;
     private String[] playerNames;
+    private LinkedList<Position> playerStartPositions;
 
     private UDPServer myServer;
 
@@ -36,6 +41,7 @@ public class Game {
         playerNames = new String[4];
         myServer = new UDPServer(this);
         new Thread(myServer);
+        playerStartPositions = new LinkedList<>();
     }
 
     public void init(int totalPlayers){
@@ -56,57 +62,103 @@ public class Game {
         String[] map = FileTools.fileRead("map.txt");
         //TODO ---------
 
-        storeWallsLocations(map);
+        storeInitialInfo(map);
 
         System.out.println("-- All Players Connected --");
 
         //add players name (key) and position to HashMap
         positionsList = new ConcurrentHashMap<>();
-        for (String name: playerNames){
-            positionsList.put(name,new Position());
-        }
+
 
     }
 
-    /**
-     * Check collisions with walls
-     * @return
-     */
-    private boolean collisionsWithMap(){
 
-        for (int i = 0; i < playerNames.length; i++){
-            //verify if walls location contains a player intended position
-            if(wallsLocations.contains(positionsList.get(playerNames[i]))){
-                return false;
-            }
+    /**
+     * Add players to the ConcurrentHashMap
+     * @param name player name to be created
+     */
+    public void putPlayer(String name){
+
+        synchronized (playerStartPositions) {
+
+            Position position = playerStartPositions.remove();
+            positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
+
+        }
+    }
+
+    /**
+     *
+     * @param name Player name, Is his Inet Address
+     * @param whereTo Direction where he wants to move
+     * @return the updated position, Either the position where he was in case of failure or the new position if the check's succeeds
+     */
+
+    private Position movePlayer(String name, Direction whereTo) {
+
+        Position playerPos = positionsList.get(name).getPos();
+
+        switch (whereTo) {
+
+            case UP:
+                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() - 1, playerPos.getRow()), wallsLocations)) {
+                    playerPos.setCol(playerPos.getCol() - 1);
+                }
+                break;
+
+            case DOWN:
+                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() + 1, playerPos.getRow()), wallsLocations)) {
+                    playerPos.setCol(playerPos.getCol() + 1);
+                }
+                break;
+
+            case LEFT:
+                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() - 1), wallsLocations)) {
+                    playerPos.setRow(playerPos.getRow() - 1);
+                }
+                break;
+            case RIGHT:
+                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() + 1), wallsLocations)) {
+                    playerPos.setRow(playerPos.getRow() + 1);
+                }
+                break;
+            default:
+                System.out.println("Something went wrong in the movePlayer()!");
+                return null;
 
         }
 
-        return true;
+        return playerPos;
+
 
     }
 
     /**
      * Check collisions between players
+     *
      * @return
      */
-    private boolean collisionsWithPlayers(String myPlayerName, Position myPos){
+    private boolean collisionsWithPlayers(String myPlayerName, Position myPos) {
 
-        for (HashMap.Entry<String, Position> entry : positionsList.entrySet())
-            if (!myPlayerName.equals(entry.getKey())) return entry.equals(myPos);
+
+        for (HashMap.Entry<String, Player> entry : positionsList.entrySet())
+
+        //If they don't have the same name then check if there is any with the same position
+            if (!myPlayerName.equals(entry.getKey())) return entry.getValue().getPos().equals(myPos);
 
         return false;
     }
 
     /**
      * Assemble string with all players positions
+     *
      * @return
      */
-    public String assemblePlayersInfo(){
+    public String assemblePlayersInfo() {
 
-        String positions="";
-        for (ConcurrentHashMap.Entry<String, Position> entry : positionsList.entrySet()) {
-            positions = positions + entry.getKey()+":"+entry.getValue().getCol()+":"+entry.getValue().getRow()+" ";
+        String positions = "";
+        for (ConcurrentHashMap.Entry<String, Player> entry : positionsList.entrySet()) {
+            positions = positions + entry.getKey() + ":" + entry.getValue().getPos().getCol() + ":" + entry.getValue().getPos().getRow() + " ";
         }
 
         return positions;
@@ -114,32 +166,30 @@ public class Game {
 
     /**
      * Get position from a specific player
+     *
      * @return
      */
-    private Position getPlayerPosition(String playerName){
-        return positionsList.get(playerName);
+    private Position getPlayerPosition(String playerName) {
+        return positionsList.get(playerName).getPos();
     }
 
-    private void storeWallsLocations(String[] str){
+    private void storeInitialInfo(String[] str) {
         wallsLocations = new ArrayList<>();
         Position pos;
         String tempString;
 
-        for (int rows = 0 ; rows < wallsLocations.size(); rows++) {
-            tempString = str[0];
+        for (int rows = 0; rows < wallsLocations.size(); rows++) {
+            tempString = str[rows];
             for (int cols = 0; cols < tempString.length(); cols++) {
-                if (tempString.indexOf(cols)!=0) wallsLocations.add(new Position(cols,rows));
+                if (tempString.charAt(cols) == 1 || tempString.charAt(cols) == 7){
+                    wallsLocations.add(new Position(cols, rows));
+                } else if(tempString.charAt(cols) == EnumColors.GREEN.ordinal()){
+                    playerStartPositions.add(new Position(cols,rows));
+
+                }
             }
         }
     }
 
 
-    //Find the first empty slot and put it there.
-    public void setName(String newName){
-        for (int i = 0; i <playerNames.length ; i++) {
-            if(playerNames[i] == null){
-                playerNames[i] = newName;
-            }
-        }
-    }
 }

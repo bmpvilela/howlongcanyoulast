@@ -53,7 +53,7 @@ public class ClientWrite implements Runnable  {
                 DatagramPacket packet;
 
                 try {
-                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, InetAddress.getByName("127.0.0.1") ,8080);
+                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, clientSocket.getInetAddress() ,clientSocket.getPort());
                     System.out.println("waiting to send");
                     clientSocket.send(packet);
                     System.out.println("sent");
