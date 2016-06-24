@@ -24,7 +24,7 @@ public class Tester {
                 game.start();
             }
         }).start();
-        ClientWrite clientWrite = new ClientWrite(InetAddress.getByName("192.168.1.17") ,8081);
+        ClientWrite clientWrite = new ClientWrite(InetAddress.getByName("192.168.1.17") ,8080);
         clientWrite.run();
     }
 }

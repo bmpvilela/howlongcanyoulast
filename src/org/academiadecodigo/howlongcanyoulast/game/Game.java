@@ -40,7 +40,7 @@ public class Game {
         this.rows = rows;
         playerNames = new String[4];
         myServer = new UDPServer(this);
-        new Thread(myServer);
+        new Thread(myServer).start();
         playerStartPositions = new LinkedList<>();
     }
 
@@ -52,7 +52,7 @@ public class Game {
 
         storeInitialInfo(map);
 
-        Field.init("map2.txt");
+//        Field.init("map2.txt");
 
 
         gameTime = new GameTime(totalPlayers);

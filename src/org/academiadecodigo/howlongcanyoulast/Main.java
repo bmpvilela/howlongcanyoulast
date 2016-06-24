@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
 
         //TODO Choose client or server by args
-
+        // TODO: 24/06/16 Hash of the map to send along with it
 
         new MazeGenerator("map2.txt", DificultyType.NORMAL).GenerateMap();
         Game game = new Game(50, 15);

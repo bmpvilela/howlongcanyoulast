@@ -40,7 +40,7 @@ public class ClientWrite implements Runnable  {
 //            e.printStackTrace();
 //        }
 
-        ClientBoard.init("map.txt");
+        ClientBoard.init("map2.txt");
 
         score = new Scores(4);
         gameTime = new GameTime(4);
