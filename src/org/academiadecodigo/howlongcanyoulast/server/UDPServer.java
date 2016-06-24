@@ -1,6 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.server;
 
 import org.academiadecodigo.howlongcanyoulast.game.Game;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -41,6 +42,8 @@ public class UDPServer implements Runnable {
 
             while(true) {
 
+
+
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
                 System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
@@ -50,7 +53,6 @@ public class UDPServer implements Runnable {
 
                     ClientThread ct = new ClientThread(serverSocket, receivePacket);
                     clientList.put(receivePacket.getAddress(), ct);
-                    game.setName("" + receivePacket.getAddress());
                     pool.submit(ct);
 
                 } else if (clientList.containsKey(receivePacket.getAddress()) &&
@@ -76,25 +78,20 @@ public class UDPServer implements Runnable {
         }
     }*/
 
-//    public static void main(String[] args) {
-//
-//        UDPServer server = new UDPServer();
-//        server.run();
-//
-//    }
 
     class ClientThread implements Runnable {
 
-        //InetAddress addr;
         //int port;
         DatagramPacket packet;
         DatagramSocket socket;
+        Player myPlayer;
         private boolean running = true;
 
 
         public ClientThread(DatagramSocket socket, DatagramPacket packet) {
             this.socket = socket;
             this.packet = packet;
+            game.putPlayer("" + packet.getAddress());
         }
 
         @Override

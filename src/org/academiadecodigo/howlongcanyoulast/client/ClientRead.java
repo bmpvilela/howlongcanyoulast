@@ -38,7 +38,7 @@ public class ClientRead {
 
     public byte[] receiveFromServer() {
 
-        //Don't create everytime the receiveFromServer is called
+        //todo Don't create every time the receiveFromServer is called
         byte[] serverData = new byte[1000];
         try {
             // Create and receive UDP datagram packet from the socket
@@ -73,7 +73,5 @@ public class ClientRead {
 
     }
 
-    //TODO receiveFromServer()
-    //TODO display()
 
 }

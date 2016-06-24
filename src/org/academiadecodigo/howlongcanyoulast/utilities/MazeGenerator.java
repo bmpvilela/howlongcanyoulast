@@ -62,10 +62,10 @@ public class MazeGenerator {
                     cells[i][j] = EnumColors.BLUE.ordinal(); //Color blue for the border
 
                 //Set the players positions
-                } else if((i < 3 && j < 3)
-                        || (i> cells.length-3 && j < 3)
-                        || (i<3 && j>cells[i].length-4)
-                        || (i>cells.length-3 && j>cells[i].length-4) ){
+                } else if((i < 3 && j < 2)
+                        || (i> cells.length-3 && j < 2)
+                        || (i<3 && j>cells[i].length-3)
+                        || (i>cells.length-3 && j>cells[i].length-3) ){
                     cells[i][j] = EnumColors.GREEN.ordinal(); // Green for the players
 
                 //Set the outside path
