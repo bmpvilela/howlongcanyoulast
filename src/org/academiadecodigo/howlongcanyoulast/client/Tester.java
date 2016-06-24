@@ -10,8 +10,6 @@ import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
  */
 public class Tester {
     public static void main(String[] args) {
-        MazeGenerator mz = new MazeGenerator(80,30, DificultyType.BABY);
-        mz.GenerateMap();
         Game game = new Game(100, 25);
         game.init(4);
         game.start();

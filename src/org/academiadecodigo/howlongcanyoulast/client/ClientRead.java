@@ -37,6 +37,8 @@ public class ClientRead {
 
 
     public byte[] receiveFromServer() {
+
+        //Don't create everytime the receiveFromServer is called
         byte[] serverData = new byte[1000];
         try {
             // Create and receive UDP datagram packet from the socket
