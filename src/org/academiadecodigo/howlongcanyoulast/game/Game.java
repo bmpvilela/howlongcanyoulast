@@ -46,6 +46,41 @@ public class Game {
 
     public void init(int totalPlayers){
 
+        positionsList = new ConcurrentHashMap<>();
+
+        String[] map = FileTools.fileRead("map2.txt");
+
+        storeInitialInfo(map);
+
+        Field.init("map2.txt");
+
+
+        gameTime = new GameTime(totalPlayers);
+        scores = new Scores(totalPlayers);
+
+//        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
+//
+//        // TODO remove thread sleep
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
+//        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
+//
+//        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
+//        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
+//
+//        gameTime.setStartTime();
+//
+//        while (!gameTime.isGameOver()) {
+//            Field.draw(gameTime, scores);
+//        }
+//
+//        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
+//        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
     }
 
     public void start() {
@@ -55,22 +90,6 @@ public class Game {
     /**
      * Init game
      */
-
-    public void init(){
-
-        //TODO FOR TEST REMOVE
-        String[] map = FileTools.fileRead("map.txt");
-        //TODO ---------
-
-        storeInitialInfo(map);
-
-        System.out.println("-- All Players Connected --");
-
-        //add players name (key) and position to HashMap
-        positionsList = new ConcurrentHashMap<>();
-
-
-    }
 
 
     /**
@@ -133,6 +152,7 @@ public class Game {
 
     }
 
+
     /**
      * Check collisions between players
      *
@@ -175,15 +195,16 @@ public class Game {
 
     private void storeInitialInfo(String[] str) {
         wallsLocations = new ArrayList<>();
-        Position pos;
         String tempString;
 
-        for (int rows = 0; rows < wallsLocations.size(); rows++) {
+
+        for (int rows = 0; rows < str.length; rows++) {
             tempString = str[rows];
             for (int cols = 0; cols < tempString.length(); cols++) {
-                if (tempString.charAt(cols) == 1 || tempString.charAt(cols) == 7){
+
+                if (tempString.charAt(cols) == '1' || tempString.charAt(cols) == '7'){
                     wallsLocations.add(new Position(cols, rows));
-                } else if(tempString.charAt(cols) == EnumColors.GREEN.ordinal()){
+                } if(tempString.charAt(cols) == '4'){
                     playerStartPositions.add(new Position(cols,rows));
 
                 }

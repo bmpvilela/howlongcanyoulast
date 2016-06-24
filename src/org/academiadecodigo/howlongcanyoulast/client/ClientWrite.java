@@ -1,9 +1,11 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
+
 import com.googlecode.lanterna.input.Key;
 import org.academiadecodigo.howlongcanyoulast.Scores;
 import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.*;
 
@@ -15,12 +17,23 @@ public class ClientWrite implements Runnable  {
 
     private String playersPositions;
     DatagramSocket clientSocket = null;
+    private InetAddress serverAdress;
+    private int port;
+
+
+
     Scores score;
     GameTime gameTime;
 
-    public ClientWrite(DatagramSocket clientSocket){
+    public ClientWrite(InetAddress serverAdress, int port ) throws SocketException {
 
-        this.clientSocket = clientSocket;
+
+        this.serverAdress = serverAdress;
+        this.port = port;
+        clientSocket = new DatagramSocket();
+        new Thread(new ClientRead(clientSocket)).start();
+        System.out.println("Created");
+//        this.clientSocket = clientSocket;
 //        try {
 //            this.clientSocket = new DatagramSocket();
 //        } catch (SocketException e) {
@@ -46,14 +59,13 @@ public class ClientWrite implements Runnable  {
             ClientBoard.draw(gameTime, score);
 
             if(value != null){
-
                 System.out.println((byte)value.getCharacter());
 
                 byte[] sendBuffer = {(byte)value.getCharacter()};
                 DatagramPacket packet;
 
                 try {
-                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, clientSocket.getInetAddress() ,clientSocket.getPort());
+                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, serverAdress, port);
                     System.out.println("waiting to send");
                     clientSocket.send(packet);
                     System.out.println("sent");

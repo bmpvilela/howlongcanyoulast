@@ -10,37 +10,29 @@ import java.util.ArrayList;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class ClientRead {
+public class ClientRead implements Runnable{
 
    // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
     private String playersPositions;
 
-    public ClientRead(int port){
-        try {
-            clientSocket = new DatagramSocket();
-
-        } catch (SocketException e) {
-            System.out.println("Fail to create socket");
-        }
+    public ClientRead(DatagramSocket clientSocket){
+        this.clientSocket = clientSocket;
     }
 
+    @Override
+    public void run(){
 
-    public void start(){
-
-        Thread t = new Thread(new ClientWrite(clientSocket));
-        t.start();
+        byte[] serverData = new byte[1000];
 
         while(true){
-            display(receiveFromServer());
+            display(receiveFromServer(serverData));
+
         }
     }
 
 
-    public byte[] receiveFromServer() {
-
-        //Don't create everytime the receiveFromServer is called
-        byte[] serverData = new byte[1000];
+    public byte[] receiveFromServer(byte[] serverData) {
         try {
             // Create and receive UDP datagram packet from the socket
             DatagramPacket receivePacket = new DatagramPacket(serverData, serverData.length);
@@ -73,4 +65,6 @@ public class ClientRead {
         return clientData;
 
     }
+
+
 }
