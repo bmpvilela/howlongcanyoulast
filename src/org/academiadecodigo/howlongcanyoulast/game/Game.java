@@ -39,8 +39,8 @@ public class Game {
         this.cols = cols;
         this.rows = rows;
         playerNames = new String[4];
-        myServer = new UDPServer(this);
-        new Thread(myServer).start();
+//        myServer = new UDPServer(this);
+//        new Thread(myServer).start();
 
         playerStartPositions = new LinkedList<>();
     }
@@ -61,29 +61,29 @@ public class Game {
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
 
-        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
-
-        // TODO remove thread sleep
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
-        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
-
-        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
-        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
-
-        gameTime.setStartTime();
-
-        while (!gameTime.isGameOver()) {
-            Field.draw(gameTime, scores);
-        }
-
-        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
-        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
+//        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
+//
+//        // TODO remove thread sleep
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
+//        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
+//
+//        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
+//        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
+//
+//        gameTime.setStartTime();
+//
+//        while (!gameTime.isGameOver()) {
+//            Field.draw(gameTime, scores);
+//        }
+//
+//        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
+//        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
     }
 
     public void start() {

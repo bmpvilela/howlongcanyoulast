@@ -20,16 +20,25 @@ public class ClientWrite implements Runnable  {
     //TODO input()
     //TODO sendToServer()
     DatagramSocket clientSocket = null;
+    private InetAddress serverAdress;
+    private int port;
 
 
 
 
-    public ClientWrite(DatagramSocket clientSocket){
-        this.clientSocket = clientSocket;
+    public ClientWrite(InetAddress serverAdress, int port ) throws SocketException {
+
+
+        this.serverAdress = serverAdress;
+        this.port = port;
+        clientSocket = new DatagramSocket();
+        new Thread(new ClientRead(clientSocket)).start();
+        System.out.println("Created");
+//        this.clientSocket = clientSocket;
 //        try {
 //            this.clientSocket = new DatagramSocket();
 //        } catch (SocketException e) {
-//            e.printStackTrace();
+//           e.printStackTrace();
 //        }
     }
 
@@ -45,7 +54,7 @@ public class ClientWrite implements Runnable  {
                 DatagramPacket packet;
 
                 try {
-                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, InetAddress.getByName("192.168.1.21") ,8080);
+                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, serverAdress, port);
                     System.out.println("waiting to send");
                     clientSocket.send(packet);
                     System.out.println("sent");
