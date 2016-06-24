@@ -13,22 +13,26 @@ import java.util.concurrent.Executors;
 /**
  * Created by codecadet on 22/06/16.
  */
-public class UDPServer {
+public class UDPServer implements Runnable{
 
     private static final int MAX_PLAYERS = 4;
+    private String allPlayerPositions;
 
-    public void start() {
+    private DatagramSocket serverSocket = null;
+    private ExecutorService pool;
+    private HashMap<InetAddress, ClientThread> clientList;
 
-        DatagramSocket serverSocket = null;
+    @Override
+    public void run() {
 
-        ExecutorService pool = Executors.newFixedThreadPool(4);
-
-        HashMap<InetAddress, ClientThread> clientList = new HashMap<>();
+        serverSocket = null;
+        pool = Executors.newFixedThreadPool(4);
+        clientList = new HashMap<>();
 
 
         try {
             serverSocket = new DatagramSocket(8080);
-            byte[] data = new byte[5];
+            byte[] data = new byte[1];
 
             while(true) {
 
@@ -66,12 +70,12 @@ public class UDPServer {
         }
     }*/
 
-    public static void main(String[] args) {
-
-        UDPServer server = new UDPServer();
-        server.start();
-
-    }
+//    public static void main(String[] args) {
+//
+//        UDPServer server = new UDPServer();
+//        server.start();
+//
+//    }
 
     class ClientThread implements Runnable {
 
@@ -97,6 +101,8 @@ public class UDPServer {
                 packet = new DatagramPacket("answer\n".getBytes(), "answer\n".getBytes().length, packet.getAddress(), packet.getPort());
                 this.socket.send(packet);
 
+                System.out.println();
+
                 running = false;
 
             } catch (IOException e) {
@@ -108,6 +114,10 @@ public class UDPServer {
         public boolean isRunning() {
             return running;
         }
+    }
+
+    public void setAllPlayerPositions(String allPositions){
+        this.allPlayerPositions = allPositions;
     }
 
 }
