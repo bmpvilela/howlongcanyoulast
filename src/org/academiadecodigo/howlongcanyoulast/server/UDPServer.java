@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,22 +19,22 @@ import java.util.concurrent.Executors;
 public class UDPServer implements Runnable {
 
     private static final int MAX_PLAYERS = 4;
+    private DatagramSocket serverSocket;
+
     private Game game;
+    private ConcurrentHashMap<InetAddress, ClientThread> clientList;
 
     public UDPServer(Game game){
         this.game = game;
     }
 
-
     @Override
     public void run() {
 
-        DatagramSocket serverSocket = null;
+        serverSocket = null;
 
         ExecutorService pool = Executors.newFixedThreadPool(4);
-
-        HashMap<InetAddress, ClientThread> clientList = new HashMap<>();
-
+        clientList = new ConcurrentHashMap<>();
 
         try {
             serverSocket = new DatagramSocket(8080);
@@ -44,21 +45,39 @@ public class UDPServer implements Runnable {
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
                 System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
-                System.out.println("received: " + new String(receivePacket.getData()));
 
-                if (!clientList.containsKey(receivePacket.getAddress()) && clientList.size() < MAX_PLAYERS) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("received: " + new String(receivePacket.getData()));
 
-                    ClientThread ct = new ClientThread(serverSocket, receivePacket);
-                    clientList.put(receivePacket.getAddress(), ct);
-                    game.setName("" + receivePacket.getAddress());
-                    pool.submit(ct);
+                        try {
+                            Thread.sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
-                } else if (clientList.containsKey(receivePacket.getAddress()) &&
-                        !clientList.get(receivePacket.getAddress()).isRunning()) {
+                        if (!clientList.containsKey(receivePacket.getAddress()) && clientList.size() < MAX_PLAYERS) {
 
-                    pool.submit(clientList.get(receivePacket.getAddress()));
+                            ClientThread ct = new ClientThread(serverSocket, receivePacket);
 
-                }
+                            synchronized (clientList) {
+                                clientList.put(receivePacket.getAddress(), ct);
+                            }
+
+                            game.setName("" + receivePacket.getAddress());
+                            pool.submit(ct);
+
+                        } else if (clientList.containsKey(receivePacket.getAddress()) &&
+                                !clientList.get(receivePacket.getAddress()).isRunning()) {
+
+                            pool.submit(clientList.get(receivePacket.getAddress()));
+
+                        }
+                    }
+                });
+
+                t.start();
 
             }
 
@@ -70,12 +89,6 @@ public class UDPServer implements Runnable {
 
     }
 
-    /*public void sendToAll() {
-        for () {
-
-        }
-    }*/
-
 //    public static void main(String[] args) {
 //
 //        UDPServer server = new UDPServer();
@@ -86,11 +99,9 @@ public class UDPServer implements Runnable {
     class ClientThread implements Runnable {
 
         //InetAddress addr;
-        //int port;
-        DatagramPacket packet;
-        DatagramSocket socket;
+        private DatagramPacket packet;
+        private DatagramSocket socket;
         private boolean running = true;
-
 
         public ClientThread(DatagramSocket socket, DatagramPacket packet) {
             this.socket = socket;
@@ -100,23 +111,39 @@ public class UDPServer implements Runnable {
         @Override
         public void run() {
 
-            try {
-                running = true;
+            running = true;
 
-                // FAZER AS MERDAS TODAS
-                packet = new DatagramPacket("answer\n".getBytes(), "answer\n".getBytes().length, packet.getAddress(), packet.getPort());
-                this.socket.send(packet);
+            // FAZER AS MERDAS TODAS
+            sendToAll();
 
-                running = false;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            running = false;
 
         }
 
         public boolean isRunning() {
             return running;
+        }
+
+        private int getPort() {
+            return packet.getPort();
+        }
+
+        private void sendToAll () {
+            try {
+
+                for (InetAddress address : clientList.keySet()) {
+
+                    System.out.println(address + " port " + clientList.get(address).getPort());
+
+                    packet = new DatagramPacket("answer\n".getBytes(), "answer\n".getBytes().length, address, clientList.get(address).getPort());
+                    this.socket.send(packet);
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
