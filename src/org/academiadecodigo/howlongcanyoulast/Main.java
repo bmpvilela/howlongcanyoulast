@@ -14,13 +14,13 @@ public class Main {
 
         //TODO Choose client or server by args
 
-        MazeGenerator mz = new MazeGenerator(100,30, DificultyType.NORMAL);
-        mz.GenerateMap();
-        Game game = new Game(100, 25);
+
+        new MazeGenerator("map2.txt", DificultyType.NORMAL).GenerateMap();
+        Game game = new Game(50, 15);
         game.init(4);
 
-        UDPServer server = new UDPServer();
-        server.start();
+        UDPServer server = new UDPServer(game);
+        server.run();
 
     }
 

@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.server;
 
+import org.academiadecodigo.howlongcanyoulast.game.Game;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -13,11 +15,18 @@ import java.util.concurrent.Executors;
 /**
  * Created by codecadet on 22/06/16.
  */
-public class UDPServer {
+public class UDPServer implements Runnable {
 
     private static final int MAX_PLAYERS = 4;
+    private Game game;
 
-    public void start() {
+    public UDPServer(Game game){
+        this.game = game;
+    }
+
+
+    @Override
+    public void run() {
 
         DatagramSocket serverSocket = null;
 
@@ -41,6 +50,7 @@ public class UDPServer {
 
                     ClientThread ct = new ClientThread(serverSocket, receivePacket);
                     clientList.put(receivePacket.getAddress(), ct);
+                    game.setName("" + receivePacket.getAddress());
                     pool.submit(ct);
 
                 } else if (clientList.containsKey(receivePacket.getAddress()) &&
@@ -66,12 +76,12 @@ public class UDPServer {
         }
     }*/
 
-    public static void main(String[] args) {
-
-        UDPServer server = new UDPServer();
-        server.start();
-
-    }
+//    public static void main(String[] args) {
+//
+//        UDPServer server = new UDPServer();
+//        server.run();
+//
+//    }
 
     class ClientThread implements Runnable {
 
