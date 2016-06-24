@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
 
 import com.googlecode.lanterna.terminal.Terminal;
 
