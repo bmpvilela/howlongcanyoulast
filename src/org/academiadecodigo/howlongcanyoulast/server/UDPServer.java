@@ -63,8 +63,8 @@ public class UDPServer implements Runnable {
 
                             pool.submit(ct);
 
-                        } else if (clientList.containsKey(receivePacket.getAddress()) &&
-                                !clientList.get(receivePacket.getAddress()).isRunning()) {
+                        } else if (clientList.containsKey(receivePacket.getAddress()) /* &&
+                                !clientList.get(receivePacket.getAddress()).isRunning()*/) {
 
                             clientList.get(receivePacket.getAddress()).setPacket(receivePacket);
                             pool.submit(clientList.get(receivePacket.getAddress()));
@@ -133,6 +133,7 @@ public class UDPServer implements Runnable {
                 received += Byte.toString(packet.getData()[i]);
 
             }
+            System.out.println("Entered the run again");
 
             game.movePlayer(name, Direction.getDir((char)Integer.parseInt(received)));
 

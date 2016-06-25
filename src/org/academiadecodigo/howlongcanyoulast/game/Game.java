@@ -97,27 +97,28 @@ public class Game {
     public void movePlayer(String name, Direction whereTo) {
 
         Position playerPos = positionsList.get(name).getPos();
+        System.out.println("Col: " + playerPos.getCol() + " Row: " + playerPos.getRow());
 
         switch (whereTo) {
 
-            case UP:
+            case LEFT:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() - 1, playerPos.getRow()), wallsLocations)) {
                     playerPos.setCol(playerPos.getCol() - 1);
                 }
                 break;
 
-            case DOWN:
+            case RIGHT:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() + 1, playerPos.getRow()), wallsLocations)) {
                     playerPos.setCol(playerPos.getCol() + 1);
                 }
                 break;
 
-            case LEFT:
+            case UP:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() - 1), wallsLocations)) {
                     playerPos.setRow(playerPos.getRow() - 1);
                 }
                 break;
-            case RIGHT:
+            case DOWN:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() + 1), wallsLocations)) {
                     playerPos.setRow(playerPos.getRow() + 1);
                 }
@@ -128,6 +129,7 @@ public class Game {
 
         }
 
+        System.out.println("Updated Col: " + playerPos.getCol() + " Updated Row: " + playerPos.getRow());
         positionsList.get(name).setPos(playerPos);
 
     }
