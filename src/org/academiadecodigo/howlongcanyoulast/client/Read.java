@@ -22,21 +22,29 @@ public class Read implements Runnable{
     @Override
     public void run(){
 
-        byte[] serverData = new byte[1000];
 
-        while(true){
+        while(true) {
             System.out.println("w");
-            System.out.println(receiveFromServer(serverData));
-            controller.setPlayersData(receiveFromServer(serverData));
-            //TODO Start time
-            System.out.println("s");
+
+            String fromServer = receiveFromServer();
+
+            if (fromServer.length() > 100) {
+                controller.initMap(fromServer);
+            } else {
+                controller.setPlayersData(receiveFromServer());
+                //TODO Start time
+                System.out.println("s");
+            }
         }
     }
 
-    public byte[] receiveFromServer(byte[] serverData) {
+    public String receiveFromServer() {
+        DatagramPacket receivePacket = null;
+        byte[] serverData = new byte[4000];
+
         try {
             // Create and receive UDP datagram packet from the socket
-            DatagramPacket receivePacket = new DatagramPacket(serverData, serverData.length);
+            receivePacket = new DatagramPacket(serverData, serverData.length);
             System.out.println("waiting to receive from server");
             clientSocket.receive(receivePacket); // blocks while packet not received
             System.out.println("received");
@@ -46,7 +54,8 @@ public class Read implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return serverData;
+        return new String(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
+
     }
 
     public void display(byte[] serverData){

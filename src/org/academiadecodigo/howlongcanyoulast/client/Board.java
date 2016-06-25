@@ -46,11 +46,11 @@ public final class Board {
      * Initializes the Screen
      * and draws the map
      *
-     * @param path Generated map
+     * @param mapFromServer Generated map
      */
-    public static void init(String path) {
+    public static void init(String[] mapFromServer) {
 
-        map = FileTools.fileRead(path);
+        map = mapFromServer;
 
         // Create the GUI
         screen = TerminalFacade.createScreen();
@@ -72,28 +72,37 @@ public final class Board {
         screenWriter.setForegroundColor(Terminal.Color.WHITE);
 
         screen.startScreen();
+        System.out.println(key);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    key = screen.readInput();
+                }
+            }
+        }).start();
+
 
     }
 
     /**
      * Displays a group of cars in the screen
-     *
      */
     public static void draw() {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime());
+        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
         drawScores();
 
-        key = screen.readInput();
+
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
     }
 
     /**
      * Position and drawing the score information
-     *
      */
     public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
@@ -107,8 +116,8 @@ public final class Board {
     /**
      * Draw the score display in a given position
      *
-     * @param colPos Column position
-     * @param rowPos Row position
+     * @param colPos     Column position
+     * @param rowPos     Row position
      * @param playerInfo Player name + time flag
      */
     private static void score(int colPos, int rowPos, String playerInfo) {
@@ -118,10 +127,10 @@ public final class Board {
         screenWriter.drawString(colPos, rowPos, playerInfo);
     }
 
-    public static void drawMap(String[] map){
+    public static void drawMap(String[] map) {
 
         int row = 0;
-        for (String value: map) {
+        for (String value : map) {
             for (int col = 0; col < value.length(); col++) {
                 if (value.charAt(col) != '0') {
                     screenWriter.setBackgroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
@@ -155,8 +164,8 @@ public final class Board {
     /**
      * Draw the time of the game
      *
-     * @param colPos Column position
-     * @param rowPos Row position
+     * @param colPos      Column position
+     * @param rowPos      Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
     private static void drawTime(int colPos, int rowPos, String elapsedTime) {
@@ -178,7 +187,7 @@ public final class Board {
     /**
      * Animate an array of strings on the screen
      *
-     * @param text Text to animate
+     * @param text            Text to animate
      * @param stopAnimationAt Where the text stops
      */
     public static void animation(String[] text, int stopAnimationAt) {
@@ -222,9 +231,11 @@ public final class Board {
         return width;
     }
 
-    public static Key getKey() {return key; }
+    public static Key getKey() {
+        return key;
+    }
 
-    public static void setAllPlayersPositions(String[] positions){
+    public static void setAllPlayersPositions(String[] positions) {
         allPlayersPositions = positions;
     }
 }

@@ -26,16 +26,18 @@ public class Controller {
         new Thread(clientRead).start();
     }
 
-    public void setPlayersData(byte[] data){
+    public void setPlayersData(String data){
 
-        rawPlayersData = new String(data, StandardCharsets.UTF_8);
+        rawPlayersData = "";
+
         Board.setAllPlayersPositions(dividPositionsData(rawPlayersData));
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Board.draw();
+
+
     }
 
     private String[] dividPositionsData(String playersPositions){
@@ -59,6 +61,24 @@ public class Controller {
     public void inicialPositions(String inicialPositions){
         dividPositionsData(inicialPositions);
     }
+
+    public void initMap(String map){
+
+        String[] mapToFeed = map.split(" ");
+
+        Board.init(mapToFeed);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    Board.draw();
+                }
+            }
+        }).start();
+
+    }
+
 }
 
 //TODO         Board.init("map.txt");
