@@ -30,7 +30,7 @@ public class ClientWrite implements Runnable  {
         new Thread(new ClientRead(clientSocket)).start();
         System.out.println("Created");
 
-        ClientBoard.init("map.txt");
+        ClientBoard.init("map2.txt");
 
         score = new Scores(4);
         gameTime = new GameTime(4);
