@@ -62,6 +62,7 @@ public class Game {
     public void putPlayer(String name){
 
         synchronized (playerStartPositions) {
+
             Position position = playerStartPositions.remove();
             positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
             numPlayers++;
@@ -76,7 +77,7 @@ public class Game {
      * @return the updated position, Either the position where he was in case of failure or the new position if the check's succeeds
      */
 
-    public Position movePlayer(String name, Direction whereTo) {
+    public void movePlayer(String name, Direction whereTo) {
 
         Position playerPos = positionsList.get(name).getPos();
 
@@ -106,11 +107,11 @@ public class Game {
                 break;
             default:
                 System.out.println("Something went wrong in the movePlayer()!");
-                return null;
+                break;
 
         }
 
-        return playerPos;
+        positionsList.get(name).setPos(playerPos);
 
     }
 
