@@ -12,9 +12,7 @@ import java.util.ArrayList;
  */
 public class ClientRead implements Runnable{
 
-   // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
-    private String playersPositions;
 
     public ClientRead(DatagramSocket clientSocket){
         this.clientSocket = clientSocket;
@@ -31,7 +29,6 @@ public class ClientRead implements Runnable{
         }
     }
 
-
     public byte[] receiveFromServer(byte[] serverData) {
         try {
             // Create and receive UDP datagram packet from the socket
@@ -39,8 +36,6 @@ public class ClientRead implements Runnable{
             System.out.println("waiting to receive from server");
             clientSocket.receive(receivePacket); // blocks while packet not received
             System.out.println("received");
-
-            //System.out.println(serverData);
 
         } catch (SocketException e) {
             e.printStackTrace();
@@ -50,11 +45,9 @@ public class ClientRead implements Runnable{
         return serverData;
     }
 
-
     public void display(byte[] serverData){
         System.out.println(serverData);
     }
-
 
     public byte[] byteToSend(ArrayList<Byte> data){
         byte[] clientData;
@@ -65,6 +58,4 @@ public class ClientRead implements Runnable{
         return clientData;
 
     }
-
-
 }

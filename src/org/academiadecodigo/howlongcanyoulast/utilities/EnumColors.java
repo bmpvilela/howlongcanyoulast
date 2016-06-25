@@ -26,8 +26,6 @@ public enum EnumColors {
 
     public static Terminal.Color getColorById(int id) {
 
-        //BLACK.ordinal();
-
         for(EnumColors e : values()) {
             if (e.numColor == id) return e.color;
         }

@@ -1,11 +1,9 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-
 import com.googlecode.lanterna.input.Key;
 import org.academiadecodigo.howlongcanyoulast.Scores;
 import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.*;
 
@@ -20,8 +18,6 @@ public class ClientWrite implements Runnable  {
     private InetAddress serverAdress;
     private int port;
 
-
-
     Scores score;
     GameTime gameTime;
 
@@ -33,12 +29,6 @@ public class ClientWrite implements Runnable  {
         clientSocket = new DatagramSocket();
         new Thread(new ClientRead(clientSocket)).start();
         System.out.println("Created");
-//        this.clientSocket = clientSocket;
-//        try {
-//            this.clientSocket = new DatagramSocket();
-//        } catch (SocketException e) {
-//            e.printStackTrace();
-//        }
 
         ClientBoard.init("map.txt");
 
@@ -102,7 +92,7 @@ public class ClientWrite implements Runnable  {
     private String[] dividPositionsData(String playersPositions){
 
         String[] splitedPlayers = playersPositions.split("\\s+"); //1st split by spaces (IP1:x:y IP2:x:y ...)
-        String[] tempData = new String[3];
+        String[] tempData;
         String[] allData = new String[12]; //for store 2nd split by : (IP1 and x and y)
 
         int i = 0;
