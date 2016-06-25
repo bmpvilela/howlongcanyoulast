@@ -91,6 +91,7 @@ public class UDPServer implements Runnable {
         for (ClientThread ct : clientList.values()){
 
             ct.send(toSend);
+            System.out.println(toSend);
 
         }
 
@@ -133,9 +134,10 @@ public class UDPServer implements Runnable {
                 received += Byte.toString(packet.getData()[i]);
 
             }
-            System.out.println("Entered the run again");
 
             game.movePlayer(name, Direction.getDir((char)Integer.parseInt(received)));
+
+            sendToAll(game.assemblePlayersInfo());
 
             //Send the input to the player
             //System.out.println(received);

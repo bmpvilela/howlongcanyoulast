@@ -10,6 +10,8 @@ import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -95,10 +97,18 @@ public final class Board {
         drawMap(map);
         drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
         drawScores();
+        drawPlayers();
 
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
+    }
+
+    private static void drawPlayers() {
+
+        if (allPlayersPositions != null) {
+            System.out.println(Arrays.toString(allPlayersPositions));
+        }
     }
 
     /**
