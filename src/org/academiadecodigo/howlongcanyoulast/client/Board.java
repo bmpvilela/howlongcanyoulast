@@ -112,8 +112,8 @@ public final class Board {
      * @param playerInfo Player name + time flag
      */
     private static void score(int colPos, int rowPos, String playerInfo) {
-        screenWriter.setBackgroundColor(EnumColors.getColorById(7));
-        screenWriter.setForegroundColor(EnumColors.getColorById(0));
+        screenWriter.setBackgroundColor(EnumColors.WHITE.getColor());
+        screenWriter.setForegroundColor(EnumColors.BLACK.getColor());
 
         screenWriter.drawString(colPos, rowPos, playerInfo);
     }
@@ -124,8 +124,8 @@ public final class Board {
         for (String value: map) {
             for (int col = 0; col < value.length(); col++) {
                 if (value.charAt(col) != '0') {
-                    screenWriter.setBackgroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
-                    screenWriter.setForegroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
+                    screenWriter.setBackgroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
+                    screenWriter.setForegroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
 
                     screenWriter.drawString(col, row, "\u2588"); // █ BLOCK CHAR
                 }
@@ -140,8 +140,8 @@ public final class Board {
     public static void simpleDraw(String[] text) {
         screen.clear();
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-        screenWriter.setForegroundColor(EnumColors.getColorById(7));
+        screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+        screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
         // Draw all string of the array
         for (int i = 0; i < text.length; i++) {
@@ -161,16 +161,16 @@ public final class Board {
      */
     private static void drawTime(int colPos, int rowPos, String elapsedTime) {
 
-        int foregroundColor = 0;
-        int backgroundColor = 7;
+        Terminal.Color foregroundColor = EnumColors.BLACK.getColor();
+        Terminal.Color backgroundColor = EnumColors.WHITE.getColor();
 
         if (gameTime.isLast10Seconds()) {
-            foregroundColor = 7;
-            backgroundColor = 2;
+            foregroundColor = EnumColors.WHITE.getColor();
+            backgroundColor = EnumColors.RED.getColor();
         }
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(backgroundColor));
-        screenWriter.setForegroundColor(EnumColors.getColorById(foregroundColor));
+        screenWriter.setBackgroundColor(backgroundColor);
+        screenWriter.setForegroundColor(foregroundColor);
 
         screenWriter.drawString(colPos, rowPos, elapsedTime);
     }
@@ -196,8 +196,8 @@ public final class Board {
 
                 screen.clear();
 
-                screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-                screenWriter.setForegroundColor(EnumColors.getColorById(7));
+                screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+                screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
                 // Draw all string of the array
                 for (int i = 0; i < text.length; i++) {

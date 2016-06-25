@@ -1,9 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-import javax.naming.ldap.Control;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
@@ -21,7 +19,7 @@ public class Controller {
 
     public Controller(InetAddress serverAdress, int port) throws SocketException {
         clientWrite = new Write(serverAdress,port,this);
-        clientWrite.run();
+        new Thread(clientWrite).start();
 
         clientSocket = new DatagramSocket();
         clientRead = new Read(clientSocket,this);
@@ -62,6 +60,5 @@ public class Controller {
         dividPositionsData(inicialPositions);
     }
 }
-
 
 //TODO         Board.init("map.txt");
