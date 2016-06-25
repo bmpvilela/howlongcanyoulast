@@ -18,10 +18,10 @@ public class Controller {
     private String rawPlayersData;
 
     public Controller(InetAddress serverAdress, int port) throws SocketException {
-        clientWrite = new Write(serverAdress,port,this);
+        clientSocket = new DatagramSocket();
+        clientWrite = new Write(serverAdress,port,this,clientSocket);
         new Thread(clientWrite).start();
 
-        clientSocket = new DatagramSocket();
         clientRead = new Read(clientSocket,this);
         new Thread(clientRead).start();
     }

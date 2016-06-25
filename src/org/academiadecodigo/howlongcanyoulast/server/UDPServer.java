@@ -25,6 +25,8 @@ public class UDPServer implements Runnable {
 
     public UDPServer(Game game) {
         this.game = game;
+        clientList = new HashMap<>();
+
     }
 
 
@@ -34,7 +36,6 @@ public class UDPServer implements Runnable {
         serverSocket = null;
 
         ExecutorService pool = Executors.newFixedThreadPool(4);
-        clientList = new HashMap<>();
 
         try {
             serverSocket = new DatagramSocket(8080);
@@ -45,6 +46,7 @@ public class UDPServer implements Runnable {
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
                 System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
+                System.out.println(receivePacket.getData());
 
                 Thread t = new Thread(new Runnable() {
                     @Override
@@ -56,6 +58,7 @@ public class UDPServer implements Runnable {
 
                             synchronized (clientList) {
                                 clientList.put(receivePacket.getAddress(), ct);
+                                clientList.notifyAll();
                             }
 
                             pool.submit(ct);
@@ -83,13 +86,17 @@ public class UDPServer implements Runnable {
 
     }
 
-    public void sendToAll() { // argumento array de pos?
+    public void sendToAll(String toSend) { // argumento array de pos?
         for (ClientThread ct : clientList.values()){
 
-            ct.send(game.assemblePlayersInfo());
+            ct.send(toSend);
 
         }
 
+    }
+
+    public HashMap<InetAddress,ClientThread> getClientList() {
+        return clientList;
     }
 
 
@@ -158,6 +165,10 @@ public class UDPServer implements Runnable {
             }
 
         }
+    }
+
+    public int getPlayerAmount(){
+        return clientList.size();
     }
 }
 

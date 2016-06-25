@@ -44,15 +44,36 @@ public class Game {
 
     public void init(int totalPlayers){
 
-        positionsList = new ConcurrentHashMap<>();
+        synchronized (myServer.getClientList()) {
 
-        String[] map = FileTools.fileRead("map2.txt");
+            positionsList = new ConcurrentHashMap<>();
 
-        storeInitialInfo(map);
+            String[] map = FileTools.fileRead("map2.txt");
 
-        gameTime = new GameTime(totalPlayers);
-        scores = new Scores(totalPlayers);
+            storeInitialInfo(map);
 
+            gameTime = new GameTime(totalPlayers);
+            scores = new Scores(totalPlayers);
+
+            while (myServer.getPlayerAmount() != 1) {
+                try {
+                    myServer.getClientList().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String map2 = "";
+            for (int i = 0; i < map.length; i++) {
+                map2 += map[i];
+                if (i == map.length - 1) {
+                    map2 += " ";
+                }
+            }
+
+            myServer.sendToAll(map2);
+
+        }
     }
 
     /**

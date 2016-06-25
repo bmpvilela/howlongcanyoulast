@@ -26,6 +26,7 @@ public class Read implements Runnable{
 
         while(true){
             System.out.println("w");
+            System.out.println(receiveFromServer(serverData));
             controller.setPlayersData(receiveFromServer(serverData));
             //TODO Start time
             System.out.println("s");
