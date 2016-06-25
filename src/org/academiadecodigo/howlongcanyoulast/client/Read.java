@@ -1,8 +1,5 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
@@ -10,13 +7,15 @@ import java.util.ArrayList;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class ClientRead implements Runnable{
+public class Read implements Runnable{
 
-   // private Socket clientSocket = null;
     private DatagramSocket clientSocket =null;
-    private String playersPositions;
+    private byte[] playersPositions;
+    private Controller controller;
 
-    public ClientRead(DatagramSocket clientSocket){
+    public Read(DatagramSocket clientSocket, Controller controller){
+
+        this.controller = controller;
         this.clientSocket = clientSocket;
     }
 
@@ -26,11 +25,13 @@ public class ClientRead implements Runnable{
         byte[] serverData = new byte[1000];
 
         while(true){
-            display(receiveFromServer(serverData));
-
+            System.out.println("w");
+            System.out.println(receiveFromServer(serverData));
+            controller.setPlayersData(receiveFromServer(serverData));
+            //TODO Start time
+            System.out.println("s");
         }
     }
-
 
     public byte[] receiveFromServer(byte[] serverData) {
         try {
@@ -40,8 +41,6 @@ public class ClientRead implements Runnable{
             clientSocket.receive(receivePacket); // blocks while packet not received
             System.out.println("received");
 
-            //System.out.println(serverData);
-
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -50,21 +49,11 @@ public class ClientRead implements Runnable{
         return serverData;
     }
 
-
     public void display(byte[] serverData){
         System.out.println(serverData);
     }
 
-
-    public byte[] byteToSend(ArrayList<Byte> data){
-        byte[] clientData;
-        clientData = new byte[data.size()];
-        for(int i = 0; i < data.size(); i++){
-            clientData[i] = data.get(i);
-        }
-        return clientData;
-
+    public byte[] getPlayerPosition(){
+        return playersPositions;
     }
-
-
 }

@@ -5,9 +5,32 @@ package org.academiadecodigo.howlongcanyoulast.utilities;
  */
 public enum Direction {
 
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+    UP('U'),
+    DOWN('D'),
+    LEFT('L'),
+    RIGHT('R');
+
+    char dir;
+
+    Direction(char dir) {
+        this.dir = dir;
+    }
+
+    public static Direction getDir(char dir) {
+
+        switch (dir){
+            case 'U':
+                return UP;
+            case 'D':
+                return DOWN;
+            case 'L':
+                return LEFT;
+            case 'R':
+                return RIGHT;
+            default:
+                return null;
+        }
+
+    }
 
 }

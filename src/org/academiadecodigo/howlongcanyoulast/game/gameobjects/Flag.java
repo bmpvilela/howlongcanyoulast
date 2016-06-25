@@ -10,11 +10,9 @@ public class Flag extends GameObjects {
 
     private Position pos;
 
-
     public Flag(int col, int row){
         super(col,row);
     }
-
 
     public void setPos(Position pos){
         this.pos = pos;

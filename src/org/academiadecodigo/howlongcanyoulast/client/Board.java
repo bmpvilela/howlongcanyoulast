@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Static class that defines the game screen and draws its components.
  * It's also responsible for display the information about the time and scores of the game.
  */
-public final class ClientBoard {
+public final class Board {
 
     public static int width;
     public static int height;
@@ -34,8 +34,12 @@ public final class ClientBoard {
 
     private static String[] allPlayersPositions;
 
+    private static GameTime gameTime;
+
+    private static Scores scores;
+
     //This class is not supposed to be instantiated
-    private ClientBoard() {
+    private Board() {
     }
 
     /**
@@ -54,6 +58,10 @@ public final class ClientBoard {
         // Set field size
         width = map[0].length();
         height = map.length;
+
+        gameTime = new GameTime(4); //TODO
+        scores = new Scores(4); //TODO
+
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -70,18 +78,13 @@ public final class ClientBoard {
     /**
      * Displays a group of cars in the screen
      *
-     * @param
-     * @param gameTime
-     * @param scores
      */
-    public static void draw(GameTime gameTime, Scores scores) {
+    public static void draw() {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
-        drawScores(gameTime, scores);
-
-
+        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime());
+        drawScores();
 
         key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -91,10 +94,8 @@ public final class ClientBoard {
     /**
      * Position and drawing the score information
      *
-     * @param gameTime Times for each player
-     * @param scores Position of each score
      */
-    public static void drawScores(GameTime gameTime, Scores scores) {
+    public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
 //TODO Change to be more automatic
         for (int i = 0; i < scores.getScores().length; i++) {
@@ -111,8 +112,8 @@ public final class ClientBoard {
      * @param playerInfo Player name + time flag
      */
     private static void score(int colPos, int rowPos, String playerInfo) {
-        screenWriter.setBackgroundColor(EnumColors.getColorById(7));
-        screenWriter.setForegroundColor(EnumColors.getColorById(0));
+        screenWriter.setBackgroundColor(EnumColors.WHITE.getColor());
+        screenWriter.setForegroundColor(EnumColors.BLACK.getColor());
 
         screenWriter.drawString(colPos, rowPos, playerInfo);
     }
@@ -123,8 +124,8 @@ public final class ClientBoard {
         for (String value: map) {
             for (int col = 0; col < value.length(); col++) {
                 if (value.charAt(col) != '0') {
-                    screenWriter.setBackgroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
-                    screenWriter.setForegroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
+                    screenWriter.setBackgroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
+                    screenWriter.setForegroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
 
                     screenWriter.drawString(col, row, "\u2588"); // █ BLOCK CHAR
                 }
@@ -139,8 +140,8 @@ public final class ClientBoard {
     public static void simpleDraw(String[] text) {
         screen.clear();
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-        screenWriter.setForegroundColor(EnumColors.getColorById(7));
+        screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+        screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
         // Draw all string of the array
         for (int i = 0; i < text.length; i++) {
@@ -158,18 +159,18 @@ public final class ClientBoard {
      * @param rowPos Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
-    private static void drawTime(int colPos, int rowPos, String elapsedTime, GameTime gameTime) {
+    private static void drawTime(int colPos, int rowPos, String elapsedTime) {
 
-        int foregroundColor = 0;
-        int backgroundColor = 7;
+        Terminal.Color foregroundColor = EnumColors.BLACK.getColor();
+        Terminal.Color backgroundColor = EnumColors.WHITE.getColor();
 
         if (gameTime.isLast10Seconds()) {
-            foregroundColor = 7;
-            backgroundColor = 2;
+            foregroundColor = EnumColors.WHITE.getColor();
+            backgroundColor = EnumColors.RED.getColor();
         }
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(backgroundColor));
-        screenWriter.setForegroundColor(EnumColors.getColorById(foregroundColor));
+        screenWriter.setBackgroundColor(backgroundColor);
+        screenWriter.setForegroundColor(foregroundColor);
 
         screenWriter.drawString(colPos, rowPos, elapsedTime);
     }
@@ -195,8 +196,8 @@ public final class ClientBoard {
 
                 screen.clear();
 
-                screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-                screenWriter.setForegroundColor(EnumColors.getColorById(7));
+                screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+                screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
                 // Draw all string of the array
                 for (int i = 0; i < text.length; i++) {
@@ -216,16 +217,9 @@ public final class ClientBoard {
      *
      * @return Screen width(Rows)
      */
-    public static Screen getScreen() {
-        return screen;
-    }
 
     public static int getWidth() {
         return width;
-    }
-
-    public static int getHeight() {
-        return height;
     }
 
     public static Key getKey() {return key; }

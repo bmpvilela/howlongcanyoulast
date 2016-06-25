@@ -3,7 +3,6 @@ package org.academiadecodigo.howlongcanyoulast.game;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
-import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.academiadecodigo.howlongcanyoulast.Scores;
-import org.academiadecodigo.howlongcanyoulast.utilities.Field;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -27,9 +25,9 @@ public class Game {
 
     private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
-    private int numPlayers;
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
+    private int numPlayers;
 
     private UDPServer myServer;
 
@@ -40,57 +38,43 @@ public class Game {
         this.rows = rows;
         playerNames = new String[4];
         myServer = new UDPServer(this);
-        new Thread(myServer);
+        new Thread(myServer).start();
         playerStartPositions = new LinkedList<>();
     }
 
     public void init(int totalPlayers){
 
-        positionsList = new ConcurrentHashMap<>();
+        synchronized (myServer.getClientList()) {
 
-        String[] map = FileTools.fileRead("map2.txt");
+            positionsList = new ConcurrentHashMap<>();
 
-        storeInitialInfo(map);
+            String[] map = FileTools.fileRead("map2.txt");
 
-        Field.init("map2.txt");
+            storeInitialInfo(map);
 
+            gameTime = new GameTime(totalPlayers);
+            scores = new Scores(totalPlayers);
 
-        gameTime = new GameTime(totalPlayers);
-        scores = new Scores(totalPlayers);
+            while (myServer.getPlayerAmount() != 1) {
+                try {
+                    myServer.getClientList().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
-//        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
-//
-//        // TODO remove thread sleep
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
-//        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
-//
-//        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
-//        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
-//
-//        gameTime.setStartTime();
-//
-//        while (!gameTime.isGameOver()) {
-//            Field.draw(gameTime, scores);
-//        }
-//
-//        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
-//        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
+            String map2 = "";
+            for (int i = 0; i < map.length; i++) {
+                map2 += map[i];
+                if (i == map.length - 1) {
+                    map2 += " ";
+                }
+            }
+
+            myServer.sendToAll(map2);
+
+        }
     }
-
-    public void start() {
-
-    }
-
-    /**
-     * Init game
-     */
-
 
     /**
      * Add players to the ConcurrentHashMap
@@ -102,6 +86,7 @@ public class Game {
 
             Position position = playerStartPositions.remove();
             positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
+            numPlayers++;
 
         }
     }
@@ -113,7 +98,7 @@ public class Game {
      * @return the updated position, Either the position where he was in case of failure or the new position if the check's succeeds
      */
 
-    private Position movePlayer(String name, Direction whereTo) {
+    public void movePlayer(String name, Direction whereTo) {
 
         Position playerPos = positionsList.get(name).getPos();
 
@@ -143,12 +128,11 @@ public class Game {
                 break;
             default:
                 System.out.println("Something went wrong in the movePlayer()!");
-                return null;
+                break;
 
         }
 
-        return playerPos;
-
+        positionsList.get(name).setPos(playerPos);
 
     }
 
@@ -211,6 +195,4 @@ public class Game {
             }
         }
     }
-
-
 }
