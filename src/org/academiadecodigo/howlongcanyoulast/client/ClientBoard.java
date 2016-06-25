@@ -1,26 +1,27 @@
-package org.academiadecodigo.howlongcanyoulast.utilities;
+package org.academiadecodigo.howlongcanyoulast.client;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
-import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 import org.academiadecodigo.howlongcanyoulast.Scores;
+import org.academiadecodigo.howlongcanyoulast.game.GameTime;
+import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
+import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 import java.util.HashMap;
-
-import org.academiadecodigo.howlongcanyoulast.Scores;
-import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 /**
  * Static class that defines the game screen and draws its components.
  * It's also responsible for display the information about the time and scores of the game.
  */
-public final class Field {
+public final class ClientBoard {
 
     public static int width;
     public static int height;
+
+    private static Key key;
 
     // Used to store map file
     private static String[] map;
@@ -31,8 +32,10 @@ public final class Field {
     // Screen wrapper that preserves default options
     private static ScreenWriter screenWriter;
 
+    private static String[] allPlayersPositions;
+
     //This class is not supposed to be instantiated
-    private Field() {
+    private ClientBoard() {
     }
 
     /**
@@ -62,7 +65,6 @@ public final class Field {
 
         screen.startScreen();
 
-
     }
 
     /**
@@ -76,9 +78,12 @@ public final class Field {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
+        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
         drawScores(gameTime, scores);
 
+
+
+        key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
     }
@@ -154,6 +159,7 @@ public final class Field {
      * @param elapsedTime Time passed since the beginning of the game
      */
     private static void drawTime(int colPos, int rowPos, String elapsedTime, GameTime gameTime) {
+
         int foregroundColor = 0;
         int backgroundColor = 7;
 
@@ -220,5 +226,11 @@ public final class Field {
 
     public static int getHeight() {
         return height;
+    }
+
+    public static Key getKey() {return key; }
+
+    public static void setAllPlayersPositions(String[] positions){
+        allPlayersPositions = positions;
     }
 }
