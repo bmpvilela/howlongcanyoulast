@@ -2,6 +2,7 @@ package org.academiadecodigo.howlongcanyoulast.server;
 
 import org.academiadecodigo.howlongcanyoulast.game.Game;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
+import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +24,7 @@ public class UDPServer implements Runnable {
     private DatagramSocket serverSocket;
 
     private Game game;
-    private ConcurrentHashMap<InetAddress, ClientThread> clientList;
+    private HashMap<InetAddress, ClientThread> clientList;
 
     public UDPServer(Game game) {
         this.game = game;
@@ -35,7 +37,7 @@ public class UDPServer implements Runnable {
         serverSocket = null;
 
         ExecutorService pool = Executors.newFixedThreadPool(4);
-        clientList = new ConcurrentHashMap<>();
+        clientList = new HashMap<>();
 
         try {
             serverSocket = new DatagramSocket(8080);
@@ -84,23 +86,39 @@ public class UDPServer implements Runnable {
 
     }
 
+    public void sendToAll() { // argumento array de pos?
+        for (ClientThread ct : clientList.values()){
+
+            ct.send(game.assemblePlayersInfo());
+
+        }
+
+    }
+
 
     class ClientThread implements Runnable {
 
-        //int port;
         private DatagramPacket packet;
-        private Player myPlayer;
-        private boolean running = true;
+        private boolean running;
+        private String name;
+        private DatagramSocket socket;
 
 
         public ClientThread(DatagramPacket packet) {
+            try {
+                socket = new DatagramSocket();
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
             this.packet = packet;
-            game.putPlayer("" + packet.getAddress());
+            name = "" + packet.getAddress();
+            game.putPlayer(name);
         }
 
         @Override
         public void run() {
 
+            running = true;
 
             String received = "";
             byte[] bytes = new byte[packet.getLength()];
@@ -111,9 +129,11 @@ public class UDPServer implements Runnable {
 
             }
 
+            game.movePlayer(name, Direction.getDir((char)Integer.parseInt(received)));
 
             //Send the input to the player
-            System.out.println(received);
+            //System.out.println(received);
+            running = false;
 
         }
 
@@ -125,6 +145,20 @@ public class UDPServer implements Runnable {
 
         public void setPacket(DatagramPacket packet){
             this.packet = packet;
+
+        }
+
+        public void send(String s) {
+
+            byte[] sendBuffer = new byte[256];
+
+            DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, packet.getAddress(), packet.getPort());
+
+            try {
+                socket.send(sendPacket);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
     }

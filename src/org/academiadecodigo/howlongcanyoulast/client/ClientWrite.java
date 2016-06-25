@@ -49,7 +49,7 @@ public class ClientWrite implements Runnable  {
             ClientBoard.draw(gameTime, score);
 
             if(value != null){
-                System.out.println((byte)value.getCharacter());
+                //System.out.println((byte)value.getCharacter());
 
                 byte[] sendBuffer = {(byte)value.getCharacter()};
                 DatagramPacket packet;
