@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,11 +50,10 @@ public class UDPServer implements Runnable {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("received: " + new String(receivePacket.getData()));
 
                         if (!clientList.containsKey(receivePacket.getAddress()) && clientList.size() < MAX_PLAYERS) {
 
-                            ClientThread ct = new ClientThread(serverSocket, receivePacket);
+                            ClientThread ct = new ClientThread(receivePacket);
 
                             synchronized (clientList) {
                                 clientList.put(receivePacket.getAddress(), ct);
@@ -64,6 +64,7 @@ public class UDPServer implements Runnable {
                         } else if (clientList.containsKey(receivePacket.getAddress()) &&
                                 !clientList.get(receivePacket.getAddress()).isRunning()) {
 
+                            clientList.get(receivePacket.getAddress()).setPacket(receivePacket);
                             pool.submit(clientList.get(receivePacket.getAddress()));
 
                         }
@@ -88,13 +89,11 @@ public class UDPServer implements Runnable {
 
         //int port;
         private DatagramPacket packet;
-        private DatagramSocket socket;
         private Player myPlayer;
         private boolean running = true;
 
 
-        public ClientThread(DatagramSocket socket, DatagramPacket packet) {
-            this.socket = socket;
+        public ClientThread(DatagramPacket packet) {
             this.packet = packet;
             game.putPlayer("" + packet.getAddress());
         }
@@ -102,16 +101,31 @@ public class UDPServer implements Runnable {
         @Override
         public void run() {
 
-            running = true;
 
-            // TODO FAZER AS MERDAS TODAS
+            String received = "";
+            byte[] bytes = new byte[packet.getLength()];
 
-            running = false;
+            for (int i = 0; i < bytes.length; i++) {
+
+                received += Byte.toString(packet.getData()[i]);
+
+            }
+
+
+            //Send the input to the player
+            System.out.println(received);
 
         }
 
+
         public boolean isRunning() {
             return running;
+        }
+
+
+        public void setPacket(DatagramPacket packet){
+            this.packet = packet;
+
         }
     }
 }
