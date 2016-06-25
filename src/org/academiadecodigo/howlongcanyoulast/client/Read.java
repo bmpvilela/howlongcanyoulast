@@ -28,10 +28,12 @@ public class Read implements Runnable{
 
             String fromServer = receiveFromServer();
 
+            System.out.println("Data from Server: " + fromServer);
+
             if (fromServer.length() > 100) {
                 controller.initMap(fromServer);
             } else {
-                controller.setPlayersData(receiveFromServer());
+                controller.setPlayersData(fromServer);
                 //TODO Start time
                 System.out.println("s");
             }
