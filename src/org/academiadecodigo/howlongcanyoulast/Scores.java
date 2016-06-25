@@ -1,6 +1,6 @@
 package org.academiadecodigo.howlongcanyoulast;
 
-import org.academiadecodigo.howlongcanyoulast.client.ClientBoard;
+import org.academiadecodigo.howlongcanyoulast.client.Board;
 
 /**
  * Created by andre on 21/06/2016.
@@ -31,17 +31,17 @@ public class Scores {
      */
     private void positioningScores(int totalPlayer)  {
         if (totalPlayer == 2) {
-            playerScorePos = new int[][]{{(int) (ClientBoard.getWidth() * 0.25), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.75), 0}};
+            playerScorePos = new int[][]{{(int) (Board.getWidth() * 0.25), 0},
+                                        {(int) (Board.getWidth() * 0.75), 0}};
         } else if (totalPlayer == 3) {
-            playerScorePos = new int[][]{{(int) (ClientBoard.getWidth() * 0.20), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.45), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.70), 0}};
+            playerScorePos = new int[][]{{(int) (Board.getWidth() * 0.20), 0},
+                                        {(int) (Board.getWidth() * 0.45), 0},
+                                        {(int) (Board.getWidth() * 0.70), 0}};
         } else if (totalPlayer == 4) {
-            playerScorePos = new int[][]{{(int) (ClientBoard.getWidth() * 0.15), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.35), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.55), 0},
-                                        {(int) (ClientBoard.getWidth() * 0.75), 0}};
+            playerScorePos = new int[][]{{(int) (Board.getWidth() * 0.15), 0},
+                                        {(int) (Board.getWidth() * 0.35), 0},
+                                        {(int) (Board.getWidth() * 0.55), 0},
+                                        {(int) (Board.getWidth() * 0.75), 0}};
         }
     }
 

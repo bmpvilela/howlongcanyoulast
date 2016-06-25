@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Static class that defines the game screen and draws its components.
  * It's also responsible for display the information about the time and scores of the game.
  */
-public final class ClientBoard {
+public final class Board {
 
     public static int width;
     public static int height;
@@ -34,8 +34,12 @@ public final class ClientBoard {
 
     private static String[] allPlayersPositions;
 
+    private static GameTime gameTime;
+
+    private static Scores scores;
+
     //This class is not supposed to be instantiated
-    private ClientBoard() {
+    private Board() {
     }
 
     /**
@@ -54,6 +58,10 @@ public final class ClientBoard {
         // Set field size
         width = map[0].length();
         height = map.length;
+
+        gameTime = new GameTime(4); //TODO
+        scores = new Scores(4); //TODO
+
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -70,16 +78,13 @@ public final class ClientBoard {
     /**
      * Displays a group of cars in the screen
      *
-     * @param
-     * @param gameTime
-     * @param scores
      */
-    public static void draw(GameTime gameTime, Scores scores) {
+    public static void draw() {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
-        drawScores(gameTime, scores);
+        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime());
+        drawScores();
 
         key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -89,10 +94,8 @@ public final class ClientBoard {
     /**
      * Position and drawing the score information
      *
-     * @param gameTime Times for each player
-     * @param scores Position of each score
      */
-    public static void drawScores(GameTime gameTime, Scores scores) {
+    public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
 //TODO Change to be more automatic
         for (int i = 0; i < scores.getScores().length; i++) {
@@ -156,7 +159,7 @@ public final class ClientBoard {
      * @param rowPos Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
-    private static void drawTime(int colPos, int rowPos, String elapsedTime, GameTime gameTime) {
+    private static void drawTime(int colPos, int rowPos, String elapsedTime) {
 
         int foregroundColor = 0;
         int backgroundColor = 7;

@@ -1,11 +1,8 @@
 package org.academiadecodigo.howlongcanyoulast;
 
-import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
-import org.academiadecodigo.howlongcanyoulast.client.ClientWrite;
-import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
+import org.academiadecodigo.howlongcanyoulast.client.Controller;
+import org.academiadecodigo.howlongcanyoulast.client.Write;
 import org.academiadecodigo.howlongcanyoulast.game.Game;
-import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
-import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
 
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -22,8 +19,7 @@ public class Main {
 
             switch (args[0].toUpperCase()) {
                 case "CLIENT":
-                    ClientWrite clientWrite = new ClientWrite(InetAddress.getByName("127.0.0.1") ,8080);
-                    clientWrite.run();
+                    Controller controller = new Controller(InetAddress.getByName("127.0.0.1") ,8080);
                     break;
 
                 case "SERVER":
