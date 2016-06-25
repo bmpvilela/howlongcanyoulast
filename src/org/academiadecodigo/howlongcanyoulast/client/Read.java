@@ -1,8 +1,5 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
@@ -10,11 +7,15 @@ import java.util.ArrayList;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class ClientRead implements Runnable{
+public class Read implements Runnable{
 
     private DatagramSocket clientSocket =null;
+    private byte[] playersPositions;
+    private Controller controller;
 
-    public ClientRead(DatagramSocket clientSocket){
+    public Read(DatagramSocket clientSocket, Controller controller){
+
+        this.controller = controller;
         this.clientSocket = clientSocket;
     }
 
@@ -24,8 +25,10 @@ public class ClientRead implements Runnable{
         byte[] serverData = new byte[1000];
 
         while(true){
-            display(receiveFromServer(serverData));
-
+            System.out.println("w");
+            controller.setPlayersData(receiveFromServer(serverData));
+            //TODO Start time
+            System.out.println("s");
         }
     }
 
@@ -49,13 +52,7 @@ public class ClientRead implements Runnable{
         System.out.println(serverData);
     }
 
-    public byte[] byteToSend(ArrayList<Byte> data){
-        byte[] clientData;
-        clientData = new byte[data.size()];
-        for(int i = 0; i < data.size(); i++){
-            clientData[i] = data.get(i);
-        }
-        return clientData;
-
+    public byte[] getPlayerPosition(){
+        return playersPositions;
     }
 }
