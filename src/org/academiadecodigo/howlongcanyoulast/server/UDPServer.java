@@ -87,6 +87,7 @@ public class UDPServer implements Runnable {
     }
 
     public void sendToAll(String toSend) { // argumento array de pos?
+
         for (ClientThread ct : clientList.values()){
 
             ct.send(toSend);
@@ -154,7 +155,8 @@ public class UDPServer implements Runnable {
 
         public void send(String s) {
 
-            byte[] sendBuffer = new byte[256];
+            byte[] sendBuffer = s.getBytes();
+
 
             DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, packet.getAddress(), packet.getPort());
 

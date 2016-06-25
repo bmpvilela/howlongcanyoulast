@@ -27,7 +27,6 @@ public class Game {
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
-    private int numPlayers;
 
     private UDPServer myServer;
 
@@ -65,10 +64,8 @@ public class Game {
 
             String map2 = "";
             for (int i = 0; i < map.length; i++) {
-                map2 += map[i];
-                if (i == map.length - 1) {
-                    map2 += " ";
-                }
+                map2 += map[i] + " ";
+
             }
 
             myServer.sendToAll(map2);
@@ -86,7 +83,6 @@ public class Game {
 
             Position position = playerStartPositions.remove();
             positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
-            numPlayers++;
 
         }
     }
