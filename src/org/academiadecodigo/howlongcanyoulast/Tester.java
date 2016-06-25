@@ -1,5 +1,6 @@
-package org.academiadecodigo.howlongcanyoulast.client;
+package org.academiadecodigo.howlongcanyoulast;
 
+import org.academiadecodigo.howlongcanyoulast.client.ClientWrite;
 import org.academiadecodigo.howlongcanyoulast.game.Game;
 import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
@@ -21,7 +22,6 @@ public class Tester {
             public void run() {
                 Game game = new Game(100, 25);
                 game.init(4);
-                game.start();
             }
         }).start();
         ClientWrite clientWrite = new ClientWrite(InetAddress.getByName("192.168.1.17") ,8080);

@@ -81,8 +81,6 @@ public final class ClientBoard {
         drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime(), gameTime);
         drawScores(gameTime, scores);
 
-
-
         key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
@@ -216,16 +214,9 @@ public final class ClientBoard {
      *
      * @return Screen width(Rows)
      */
-    public static Screen getScreen() {
-        return screen;
-    }
 
     public static int getWidth() {
         return width;
-    }
-
-    public static int getHeight() {
-        return height;
     }
 
     public static Key getKey() {return key; }

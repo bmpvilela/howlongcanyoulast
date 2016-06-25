@@ -3,7 +3,6 @@ package org.academiadecodigo.howlongcanyoulast.game;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
-import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.academiadecodigo.howlongcanyoulast.Scores;
-import org.academiadecodigo.howlongcanyoulast.utilities.Field;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -27,7 +25,6 @@ public class Game {
 
     private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
-    private int numPlayers;
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
 
@@ -52,45 +49,10 @@ public class Game {
 
         storeInitialInfo(map);
 
-//        Field.init("map2.txt");
-
-
         gameTime = new GameTime(totalPlayers);
         scores = new Scores(totalPlayers);
 
-//        Field.simpleDraw(GameTextType.getText(GameTextType.WAITING));
-//
-//        // TODO remove thread sleep
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        int stopAnimationAt = GameTextType.getText(GameTextType.READY)[0].length();
-//        Field.animation(GameTextType.getText(GameTextType.READY), -stopAnimationAt);
-//
-//        stopAnimationAt = GameTextType.getText(GameTextType.GO)[0].length();
-//        Field.animation(GameTextType.getText(GameTextType.GO), -stopAnimationAt);
-//
-//        gameTime.setStartTime();
-//
-//        while (!gameTime.isGameOver()) {
-//            Field.draw(gameTime, scores);
-//        }
-//
-//        stopAnimationAt = (Field.getWidth() / 2) - (GameTextType.getText(GameTextType.TIMEOUT)[0].length() / 2);
-//        Field.animation(GameTextType.getText(GameTextType.TIMEOUT), stopAnimationAt);
     }
-
-    public void start() {
-
-    }
-
-    /**
-     * Init game
-     */
-
 
     /**
      * Add players to the ConcurrentHashMap
@@ -148,7 +110,6 @@ public class Game {
         }
 
         return playerPos;
-
 
     }
 
@@ -211,6 +172,4 @@ public class Game {
             }
         }
     }
-
-
 }

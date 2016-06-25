@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * Created by codecadet on 22/06/16.
  */
@@ -105,11 +104,9 @@ public class UDPServer implements Runnable {
 
             running = true;
 
-            // FAZER AS MERDAS TODAS
-//            sendToAll();
+            // TODO FAZER AS MERDAS TODAS
 
             running = false;
-
 
         }
 
