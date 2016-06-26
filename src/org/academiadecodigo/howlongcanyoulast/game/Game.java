@@ -35,7 +35,7 @@ public class Game {
 
         this.cols = cols;
         this.rows = rows;
-        playerNames = new String[4];
+        playerNames = new String[UDPServer.MAX_PLAYERS];
         myServer = new UDPServer(this);
         new Thread(myServer).start();
         playerStartPositions = new LinkedList<>();
@@ -54,8 +54,9 @@ public class Game {
             gameTime = new GameTime(totalPlayers);
             scores = new Scores(totalPlayers);
 
-            while (myServer.getPlayerAmount() != 1) {
+            while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
                 try {
+                    myServer.sendToAll("waiting");
                     myServer.getClientList().wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
