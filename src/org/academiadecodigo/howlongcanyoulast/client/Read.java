@@ -33,11 +33,11 @@ public class Read implements Runnable{
             // TODO Andre removi souts, acho eu.... Ver so pelo sim pelo nao
             if (fromServer.length() > 100) {
                 controller.initMap(fromServer);
-            } else if (fromServer.matches("\\d{2,3}\\D\\d{2,3}$")) {
+            } else if (fromServer.matches("\\d{2,3}\\D\\d{2,3}$") && Board.getScreen() != null) {
 
                 String[] str = fromServer.split(",");
-
                 Board.initScreen(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
+
                 Board.simpleDraw(GameTextType.getText(GameTextType.WAITING));
 
             } else if(fromServer.equals("start")) {

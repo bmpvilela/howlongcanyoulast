@@ -57,7 +57,7 @@ public final class Board {
         map = mapFromServer;
 
         // Create the GUI
-        screen = TerminalFacade.createScreen();
+       // screen = TerminalFacade.createScreen();
 
         // Set field size
         width = map[0].length();
@@ -66,16 +66,16 @@ public final class Board {
         gameTime = new GameTime(4); //TODO
         scores = new Scores(4); //TODO
 
-        screen.getTerminal().setCursorVisible(false); // Not Working
+        /*screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
 
         // Default screen writing options
         screenWriter = new ScreenWriter(screen);
         screenWriter.setBackgroundColor(Terminal.Color.RED);
-        screenWriter.setForegroundColor(Terminal.Color.WHITE);
+        screenWriter.setForegroundColor(Terminal.Color.WHITE);  */
 
-        screen.startScreen();
+        //screen.startScreen();
         System.out.println(key);
 
         new Thread(new Runnable() {
@@ -278,6 +278,9 @@ public final class Board {
      *
      * @return Screen width(Rows)
      */
+    public static Screen getScreen() {
+        return screen;
+    }
 
     public static int getWidth() {
         return width;
