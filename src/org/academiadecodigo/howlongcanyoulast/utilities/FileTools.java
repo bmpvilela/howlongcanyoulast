@@ -1,4 +1,4 @@
-package org.academiadecodigo.howlongcanyoulast;
+package org.academiadecodigo.howlongcanyoulast.utilities;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ public class FileTools {
     /**
      * READ A FILE
      */
+
     public static String[] fileRead(String fileName) {
 
         BufferedReader br = null;
@@ -63,6 +64,37 @@ public class FileTools {
         }
     }
 
+    public static int[] gridSize(String fileName){
+
+        int[] temp = new int[2];
+        int cols,rows=0;
+        String line=null;
+
+        BufferedReader br = null;
+
+        try {
+
+            File theFile = new File(fileName);
+            if(!theFile.exists()) { theFile.createNewFile(); }
+
+            FileReader fileReader = new FileReader(theFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while ((line=bufferedReader.readLine()) != null) {
+                temp[0] = line.length()-1;
+                rows++;
+            }
+            temp[1] = rows;
+
+            bufferedReader.close();
+
+        } catch (Exception e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return temp;
+    }
+
     /**
      * CHECK IF A FILE EXISTS AND CAN BE READ
      */
@@ -86,13 +118,6 @@ public class FileTools {
             FileWriter fw = new FileWriter(theFile);
             bw = new BufferedWriter(fw);
 
-
-//            int i = 0;
-//            while (toWrite[i] != null) {
-//                bw.write(toWrite[i]);
-//                bw.newLine();
-//                i++;
-//            }
 
 
             for (int i = 0; i < toWrite.length ; i++) {
