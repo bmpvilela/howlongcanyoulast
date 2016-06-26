@@ -39,18 +39,26 @@ public class Controller {
         String[] splitedPlayers = playersPositions.split("\\s+"); //1st split by spaces (IP1:x:y IP2:x:y ...)
         String[] tempData;
         String[] allData = new String[12]; //for store 2nd split by : (IP1 and x and y)
+        int[] flagData = new int[2];
+
 
         // TODO Andre mexi aqui coloquei o i mais mais dentro do for porque tem de fazer um update todas as vezes que mexe num tempdata
         int i = 0;
         for (int count = 0; count < splitedPlayers.length; count++) {
             tempData = splitedPlayers[count].split("[:]"); //2nd split
 
-            for (int tempDataCount = 0; tempDataCount < tempData.length; tempDataCount++) {
-                allData[i] = tempData[tempDataCount]; //store each split
+            for (int tempDataCount = 0; tempDataCount <tempData.length; tempDataCount++) {
+                if(i < 12) {
+                    allData[i] = tempData[tempDataCount]; //store each split
+                }else if(i>12){
+                    flagData[tempDataCount-1] = Integer.parseInt(tempData[tempDataCount]);
+                }
                 i++;
             }
+
         }
 
+        Board.setFlagPosition(flagData);
         return allData;
     }
 

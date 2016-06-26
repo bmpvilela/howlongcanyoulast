@@ -52,7 +52,7 @@ public class Game {
             storeInitialInfo(map);
             gameTime = new GameTime(totalPlayers);
             scores = new Scores(totalPlayers);
-           //TODO maybe this method shouldnt be here putFlag();
+            putFlag();
 
             while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS-2) {
                 try {
@@ -91,8 +91,11 @@ public class Game {
 //TODO Amauri
     public void putFlag(){
         flag = new Flag(cols/2, rows/2);
-        int[] initialPosition = {flag.getPos().getCol(),flag.getPos().getRow()};
-        Board.setFlagPosition(initialPosition);
+    }
+
+    public void updateFlag(Position pos){
+        flag.setPos(pos);
+       // Board.setFlagPosition(flagPos);
     }
 
     /**
@@ -170,6 +173,7 @@ public class Game {
         for (ConcurrentHashMap.Entry<String, Player> entry : positionsList.entrySet()) {
             positions = positions + entry.getKey() + ":" + entry.getValue().getPos().getCol() + ":" + entry.getValue().getPos().getRow() + " ";
         }
+        positions = positions + "flag"+":"+flag.getPos().getCol()+":"+flag.getPos().getRow()+" ";
 
         return positions;
     }

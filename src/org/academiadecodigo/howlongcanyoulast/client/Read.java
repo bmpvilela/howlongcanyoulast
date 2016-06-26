@@ -40,6 +40,7 @@ public class Read implements Runnable{
 
             } else {
                 controller.setPlayersData(fromServer);
+
                 //TODO Start time
             }
         }

@@ -285,5 +285,5 @@ public final class Board {
         allPlayersPositions = positions;
     }
 
-    public static void etFlagPosition(int[] position){flagPosition = position;}
+    public static void setFlagPosition(int[] position){flagPosition = position;}
 }
