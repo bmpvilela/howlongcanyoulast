@@ -38,12 +38,16 @@ public class Read implements Runnable{
                 Board.initScreen(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
                 Board.simpleDraw(GameTextType.getText(GameTextType.WAITING));
 
+            } else if(fromServer.contains("!")) {
+
+                Board.setMessageTime(fromServer);
+
             } else if(fromServer.equals("start")) {
-                Board.animation(GameTextType.getText(GameTextType.READY), -GameTextType.getText(GameTextType.READY).length);
-                Board.animation(GameTextType.getText(GameTextType.GO), -GameTextType.getText(GameTextType.GO).length);
+                Board.animation(GameTextType.getText(GameTextType.READY));
+                Board.animation(GameTextType.getText(GameTextType.GO));
             } else {
                 controller.setPlayersData(fromServer);
-                //TODO Start time
+
             }
         }
     }

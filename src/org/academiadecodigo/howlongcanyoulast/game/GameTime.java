@@ -62,7 +62,14 @@ public class GameTime {
         seconds = (elapsedTime / 1000000000) % 60;
         minutes =  TimeUnit.NANOSECONDS.toMinutes(elapsedTime);
 
-        return String.format("%02d", (gameDuration - minutes)) + ":" + String.format("%02d", (59 - seconds));
+        if (minutes < 1 && seconds < 11)
+            return "!Last 10 seconds";
+
+        else if (seconds >= 28 && seconds <= 32)
+            return "!Remaining time " + minutes + ":" + seconds;
+
+        else
+            return "";
     }
 
     /**
@@ -95,21 +102,12 @@ public class GameTime {
     }
 
     /**
-     * Check if it is the last 10 seconds of the game
-     *
-     * @return
-     */
-    public boolean isLast10Seconds () {
-        return (gameDuration - minutes) == 0 && (59 - seconds) <= 10;
-    }
-
-    /**
      * Check if the game its over
      *
      * @return
      */
     public boolean isGameOver() {
-        return (gameDuration - minutes) == 0 && (59 - seconds) == 0;
+        return (getGameDuration() - minutes) == 0 && (59 - seconds) == 0;
     }
 
     /**
@@ -137,5 +135,9 @@ public class GameTime {
      */
     public HashMap<String, Integer> getPlayerFlagTime() {
         return playerFlagTime;
+    }
+
+    public int getGameDuration() {
+        return gameDuration + 1;
     }
 }

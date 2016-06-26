@@ -64,7 +64,6 @@ public class Game {
             }
 
             myServer.sendToAll("start");
-
             String map2 = "";
             for (int i = 0; i < map.length; i++) {
                 map2 += map[i] + " ";
@@ -72,7 +71,17 @@ public class Game {
             }
 
             myServer.sendToAll(map2);
+            myServer.sendToAll("!Game duration "+ gameTime.getGameDuration() + " minute");
 
+            try {
+
+                Thread.sleep(2000);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            gameTime.setStartTime();
         }
     }
 
@@ -100,7 +109,6 @@ public class Game {
     public void movePlayer(String name, Direction whereTo) {
 
         Position playerPos = positionsList.get(name).getPos();
-        System.out.println("Col: " + playerPos.getCol() + " Row: " + playerPos.getRow());
 
         switch (whereTo) {
 
@@ -132,7 +140,6 @@ public class Game {
 
         }
 
-        System.out.println("Updated Col: " + playerPos.getCol() + " Updated Row: " + playerPos.getRow());
         positionsList.get(name).setPos(playerPos);
 
     }
@@ -176,6 +183,10 @@ public class Game {
      */
     private Position getPlayerPosition(String playerName) {
         return positionsList.get(playerName).getPos();
+    }
+
+    public String getTime() {
+        return gameTime.getGameTime();
     }
 
     public String generateFirstString() {

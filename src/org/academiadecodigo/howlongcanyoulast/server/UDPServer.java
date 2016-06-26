@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 public class UDPServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 3;
+    public static final int MAX_PLAYERS = 1;
     private DatagramSocket serverSocket;
 
     private Game game;
@@ -46,7 +46,7 @@ public class UDPServer implements Runnable {
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
                 System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
-                System.out.println(receivePacket.getData());
+                System.out.println("Received");
 
                 Thread t = new Thread(new Runnable() {
                     @Override
@@ -64,8 +64,7 @@ public class UDPServer implements Runnable {
 
                             pool.submit(ct);
 
-                        } else if (clientList.containsKey(receivePacket.getAddress()) /* &&
-                                !clientList.get(receivePacket.getAddress()).isRunning()*/) {
+                        } else if (clientList.containsKey(receivePacket.getAddress())) {
 
                             clientList.get(receivePacket.getAddress()).setPacket(receivePacket);
                             pool.submit(clientList.get(receivePacket.getAddress()));
@@ -90,10 +89,7 @@ public class UDPServer implements Runnable {
     public void sendToAll(String toSend) { // argumento array de pos?
 
         for (ClientThread ct : clientList.values()){
-
             ct.send(toSend);
-            System.out.println(toSend);
-
         }
 
     }
@@ -140,6 +136,8 @@ public class UDPServer implements Runnable {
             game.movePlayer(name, Direction.getDir((char)Integer.parseInt(received)));
 
             sendToAll(game.assemblePlayersInfo());
+
+            //sendToAll(game.getTime()); // TODO Time
 
             //Send the input to the player
             //System.out.println(received);

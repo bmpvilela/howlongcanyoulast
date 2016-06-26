@@ -42,6 +42,8 @@ public final class Board {
 
     private static Scores scores;
 
+    private static String messageTime = "";
+
     //This class is not supposed to be instantiated
     private Board() {
     }
@@ -53,11 +55,7 @@ public final class Board {
      * @param mapFromServer Generated map
      */
     public static void init(String[] mapFromServer) {
-
         map = mapFromServer;
-
-        // Create the GUI
-       // screen = TerminalFacade.createScreen();
 
         // Set field size
         width = map[0].length();
@@ -65,18 +63,6 @@ public final class Board {
 
         gameTime = new GameTime(4); //TODO
         scores = new Scores(4); //TODO
-
-        /*screen.getTerminal().setCursorVisible(false); // Not Working
-        screen.getTerminal().getTerminalSize().setColumns(width);
-        screen.getTerminal().getTerminalSize().setRows(height);
-
-        // Default screen writing options
-        screenWriter = new ScreenWriter(screen);
-        screenWriter.setBackgroundColor(Terminal.Color.RED);
-        screenWriter.setForegroundColor(Terminal.Color.WHITE);  */
-
-        //screen.startScreen();
-        System.out.println(key);
 
         new Thread(new Runnable() {
             @Override
@@ -86,8 +72,6 @@ public final class Board {
                 }
             }
         }).start();
-
-
     }
 
     public static void initScreen(int col, int row) {
@@ -117,9 +101,9 @@ public final class Board {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
         drawScores();
         drawPlayers();
+        drawTime(messageTime);
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
@@ -128,11 +112,7 @@ public final class Board {
     private static void drawPlayers() {
 
         if (allPlayersPositions != null) {
-            //System.out.println(Arrays.toString(allPlayersPositions));
-            // TODO Andre player movimento, AKA desenhar
-
             for (int i = 0; i < allPlayersPositions.length; i += 3) {
-
                 if (allPlayersPositions[i] == null) break;
 
                 screenWriter.setBackgroundColor(EnumColors.RED.getColor());
@@ -158,7 +138,6 @@ public final class Board {
      */
     public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
-//TODO Change to be more automatic
         for (int i = 0; i < scores.getScores().length; i++) {
             score(scores.getScores()[i][0], scores.getScores()[i][1],
                     "Player" + (i + 1) + ": " + playersTimes.get("Player" + (i + 1)));
@@ -216,36 +195,31 @@ public final class Board {
     /**
      * Draw the time of the game
      *
-     * @param colPos      Column position
-     * @param rowPos      Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
-    private static void drawTime(int colPos, int rowPos, String elapsedTime) {
-
+    public static void drawTime(String elapsedTime) {
         Terminal.Color foregroundColor = EnumColors.BLACK.getColor();
         Terminal.Color backgroundColor = EnumColors.WHITE.getColor();
-
-        if (gameTime.isLast10Seconds()) {
-            foregroundColor = EnumColors.WHITE.getColor();
-            backgroundColor = EnumColors.RED.getColor();
-        }
 
         screenWriter.setBackgroundColor(backgroundColor);
         screenWriter.setForegroundColor(foregroundColor);
 
-        screenWriter.drawString(colPos, rowPos, elapsedTime);
+        screenWriter.drawString(gameTime.getColPos() - (elapsedTime.length() / 2), gameTime.getRowPos(), elapsedTime);
+
+        screen.refresh();
     }
 
     /**
      * Animate an array of strings on the screen
      *
      * @param text            Text to animate
-     * @param stopAnimationAt Where the text stops
      */
-    public static void animation(String[] text, int stopAnimationAt) {
+    public static void animation(String[] text) {
         // Start point of the text
         // Used to move text width
         int rowVelocity = 100;
+
+        int stopAnimationAt = -text[0].length();
 
         long lastTime = 0;
 
@@ -271,6 +245,7 @@ public final class Board {
                 lastTime = currentTime + 10000000;
             }
         }
+
     }
 
     /**
@@ -280,6 +255,10 @@ public final class Board {
      */
     public static Screen getScreen() {
         return screen;
+    }
+
+    public static void setMessageTime(String message) {
+        messageTime = message;
     }
 
     public static int getWidth() {
