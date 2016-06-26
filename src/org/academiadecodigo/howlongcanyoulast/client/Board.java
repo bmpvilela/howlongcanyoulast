@@ -37,6 +37,8 @@ public final class Board {
     private static ScreenWriter screenWriter;
 
     private static String[] allPlayersPositions;
+    //Amauri: the position flag will have
+    private static int[] flagPosition;
 
     private static GameTime gameTime;
 
@@ -66,6 +68,7 @@ public final class Board {
         gameTime = new GameTime(4); //TODO
         scores = new Scores(4); //TODO
 
+        //TODO Amauri
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -100,9 +103,19 @@ public final class Board {
         drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
         drawScores();
         drawPlayers();
+        //System.out.println(""+ flagPosition[0] +" "+ flagPosition[1]);
+        drawFlag();
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
+    }
+
+    //TODO Amauri
+    private static void drawFlag(){
+        screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+        screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
+        screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
+        screenWriter.drawString(flagPosition[0], flagPosition[1], "\u2588");
     }
 
     private static void drawPlayers() {
@@ -117,6 +130,7 @@ public final class Board {
 
                 screenWriter.setBackgroundColor(EnumColors.RED.getColor());
                 screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
+                screenWriter.drawString(Integer.parseInt(allPlayersPositions[i + 1]), Integer.parseInt(allPlayersPositions[i + 2]), "\u2588");
 
                 try {
 
@@ -270,4 +284,6 @@ public final class Board {
     public static void setAllPlayersPositions(String[] positions) {
         allPlayersPositions = positions;
     }
+
+    public static void etFlagPosition(int[] position){flagPosition = position;}
 }

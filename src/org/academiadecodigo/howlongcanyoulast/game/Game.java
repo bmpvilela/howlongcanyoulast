@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
+import org.academiadecodigo.howlongcanyoulast.client.Board;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
@@ -25,6 +27,7 @@ public class Game {
 
     private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
+    private Flag flag;                                          //flag object
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
 
@@ -44,18 +47,16 @@ public class Game {
     public void init(int totalPlayers){
 
         synchronized (myServer.getClientList()) {
-
             positionsList = new ConcurrentHashMap<>();
-
             String[] map = FileTools.fileRead("map2.txt");
-
             storeInitialInfo(map);
-
             gameTime = new GameTime(totalPlayers);
             scores = new Scores(totalPlayers);
+           //TODO maybe this method shouldnt be here putFlag();
 
-            while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
+            while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS-2) {
                 try {
+
                     myServer.sendToAll("waiting");
                     myServer.getClientList().wait();
                 } catch (InterruptedException e) {
@@ -68,7 +69,7 @@ public class Game {
                 map2 += map[i] + " ";
 
             }
-
+            System.out.println(map2);
             myServer.sendToAll(map2);
 
         }
@@ -86,6 +87,12 @@ public class Game {
             positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
 
         }
+    }
+//TODO Amauri
+    public void putFlag(){
+        flag = new Flag(cols/2, rows/2);
+        int[] initialPosition = {flag.getPos().getCol(),flag.getPos().getRow()};
+        Board.setFlagPosition(initialPosition);
     }
 
     /**
@@ -193,5 +200,9 @@ public class Game {
                 }
             }
         }
+    }
+
+    public Flag getFlag() {
+        return flag;
     }
 }

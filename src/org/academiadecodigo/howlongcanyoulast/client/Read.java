@@ -32,6 +32,7 @@ public class Read implements Runnable{
 
             // TODO Andre removi souts, acho eu.... Ver so pelo sim pelo nao
             if (fromServer.length() > 100) {
+                System.out.println("tste");
                 controller.initMap(fromServer);
             } else if (fromServer.equals("waiting")) {
 
