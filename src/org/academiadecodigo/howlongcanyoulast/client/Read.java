@@ -4,7 +4,6 @@ import org.academiadecodigo.howlongcanyoulast.game.GameTextType;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
 
 /**
  * Created by codecadet on 20/06/16.

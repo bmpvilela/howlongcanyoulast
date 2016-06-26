@@ -104,8 +104,8 @@ public final class Board {
 
         drawMap(map);
         drawFlag();
-        drawScores();
         drawPlayers();
+        drawScores();
         drawTime(messageTime);
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -148,9 +148,20 @@ public final class Board {
      */
     public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
-        for (int i = 0; i < scores.getScores().length; i++) {
-            score(scores.getScores()[i][0], scores.getScores()[i][1],
-                    "Player" + (i + 1) + ": " + playersTimes.get("Player" + (i + 1)));
+        if (allPlayersPositions != null) {
+            for (int i = 0; i < scores.getScores().length; i++) {
+
+                String playerKey = "Player" + (i + 1);
+
+                try {
+
+                    score(scores.getScores()[i][0], scores.getScores()[i][1], playerKey + ": " + playersTimes.get(playerKey),
+                            ("/" + InetAddress.getLocalHost().getHostAddress()).equals(allPlayersPositions[i]));
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -161,9 +172,13 @@ public final class Board {
      * @param rowPos     Row position
      * @param playerInfo Player name + time flag
      */
-    private static void score(int colPos, int rowPos, String playerInfo) {
+    private static void score(int colPos, int rowPos, String playerInfo, boolean isThePlayer) {
         screenWriter.setBackgroundColor(EnumColors.WHITE.getColor());
         screenWriter.setForegroundColor(EnumColors.BLACK.getColor());
+
+        if (isThePlayer) {
+            screenWriter.setBackgroundColor(EnumColors.YELLOW.getColor());
+        }
 
         screenWriter.drawString(colPos, rowPos, playerInfo);
     }
