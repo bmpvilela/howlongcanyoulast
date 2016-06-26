@@ -99,7 +99,6 @@ public final class Board {
         drawScores();
         drawPlayers();
 
-
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
     }
@@ -107,7 +106,12 @@ public final class Board {
     private static void drawPlayers() {
 
         if (allPlayersPositions != null) {
-            System.out.println(Arrays.toString(allPlayersPositions));
+            //System.out.println(Arrays.toString(allPlayersPositions));
+            // TODO Andre player movimento, AKA desenhar
+            screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+            screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
+
+            screenWriter.drawString(Integer.parseInt(allPlayersPositions[1]), Integer.parseInt(allPlayersPositions[2]), "\u2588");
         }
     }
 
