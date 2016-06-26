@@ -1,11 +1,10 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
-import javax.naming.ldap.Control;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * Created by codecadet on 25/06/16.
@@ -20,24 +19,20 @@ public class Controller {
     private String rawPlayersData;
 
     public Controller(InetAddress serverAdress, int port) throws SocketException {
-        clientWrite = new Write(serverAdress,port,this);
-        clientWrite.run();
-
         clientSocket = new DatagramSocket();
+        clientWrite = new Write(serverAdress,port,this,clientSocket);
+        new Thread(clientWrite).start();
+
         clientRead = new Read(clientSocket,this);
         new Thread(clientRead).start();
     }
 
-    public void setPlayersData(byte[] data){
+    public void setPlayersData(String data){
 
-        rawPlayersData = new String(data, StandardCharsets.UTF_8);
-        Board.setAllPlayersPositions(dividPositionsData(rawPlayersData));
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Board.draw();
+        // TODO Andre var don't do nothing... data nao estava a ser usada
+
+        //rawPlayersData = "";
+        Board.setAllPlayersPositions(dividPositionsData(data));
     }
 
     private String[] dividPositionsData(String playersPositions){
@@ -46,22 +41,41 @@ public class Controller {
         String[] tempData;
         String[] allData = new String[12]; //for store 2nd split by : (IP1 and x and y)
 
+        // TODO Andre mexi aqui coloquei o i mais mais dentro do for porque tem de fazer um update todas as vezes que mexe num tempdata
         int i = 0;
         for (int count = 0; count < splitedPlayers.length; count++) {
             tempData = splitedPlayers[count].split("[:]"); //2nd split
 
-            for (int tempDataCount = 0; tempDataCount < tempData.length; tempDataCount++)
+            for (int tempDataCount = 0; tempDataCount < tempData.length; tempDataCount++) {
                 allData[i] = tempData[tempDataCount]; //store each split
-
-            i++;
+                i++;
+            }
         }
+
         return allData;
     }
 
     public void inicialPositions(String inicialPositions){
         dividPositionsData(inicialPositions);
     }
-}
 
+    public void initMap(String map){
+
+        String[] mapToFeed = map.split(" ");
+
+       Board.init(mapToFeed);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    Board.draw();
+                }
+            }
+        }).start();
+
+    }
+
+}
 
 //TODO         Board.init("map.txt");

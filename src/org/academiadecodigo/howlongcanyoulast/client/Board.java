@@ -10,6 +10,10 @@ import org.academiadecodigo.howlongcanyoulast.game.GameTime;
 import org.academiadecodigo.howlongcanyoulast.utilities.EnumColors;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
+import java.lang.reflect.Array;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -33,10 +37,14 @@ public final class Board {
     private static ScreenWriter screenWriter;
 
     private static String[] allPlayersPositions;
+    //Amauri: the position flag will have
+    private static int[] flagPosition;
 
     private static GameTime gameTime;
 
     private static Scores scores;
+
+    private static String messageTime = "";
 
     //This class is not supposed to be instantiated
     private Board() {
@@ -46,14 +54,10 @@ public final class Board {
      * Initializes the Screen
      * and draws the map
      *
-     * @param path Generated map
+     * @param mapFromServer Generated map
      */
-    public static void init(String path) {
-
-        map = FileTools.fileRead(path);
-
-        // Create the GUI
-        screen = TerminalFacade.createScreen();
+    public static void init(String[] mapFromServer) {
+        map = mapFromServer;
 
         // Set field size
         width = map[0].length();
@@ -61,6 +65,24 @@ public final class Board {
 
         gameTime = new GameTime(4); //TODO
         scores = new Scores(4); //TODO
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    key = screen.readInput();
+                }
+            }
+        }).start();
+    }
+
+    public static void initScreen(int col, int row) {
+        // Create the GUI
+        screen = TerminalFacade.createScreen();
+
+        // Set field size
+        width = col;
+        height = row;
 
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
@@ -72,32 +94,60 @@ public final class Board {
         screenWriter.setForegroundColor(Terminal.Color.WHITE);
 
         screen.startScreen();
-
     }
 
     /**
      * Displays a group of cars in the screen
-     *
      */
     public static void draw() {
         screen.clear();
 
         drawMap(map);
-        drawTime(gameTime.getColPos(),gameTime.getRowPos(), gameTime.getGameTime());
+        drawFlag();
         drawScores();
+        drawPlayers();
+        drawTime(messageTime);
 
-        key = screen.readInput();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
     }
 
+    //TODO Amauri
+    private static void drawFlag(){
+        screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+        screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
+        screenWriter.drawString(flagPosition[0], flagPosition[1], "F");
+    }
+
+    private static void drawPlayers() {
+
+        if (allPlayersPositions != null) {
+            for (int i = 0; i < allPlayersPositions.length; i += 3) {
+                if (allPlayersPositions[i] == null) break;
+
+                screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+                screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
+
+                try {
+
+                    if (("/" + InetAddress.getLocalHost().getHostAddress()).equals(allPlayersPositions[i])) {
+                        screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
+                    }
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+
+                screenWriter.drawString(Integer.parseInt(allPlayersPositions[i + 1]), Integer.parseInt(allPlayersPositions[i + 2]), "\u2588");
+            }
+        }
+    }
+
     /**
      * Position and drawing the score information
-     *
      */
     public static void drawScores() {
         HashMap<String, Integer> playersTimes = gameTime.getPlayerFlagTime();
-//TODO Change to be more automatic
         for (int i = 0; i < scores.getScores().length; i++) {
             score(scores.getScores()[i][0], scores.getScores()[i][1],
                     "Player" + (i + 1) + ": " + playersTimes.get("Player" + (i + 1)));
@@ -107,25 +157,25 @@ public final class Board {
     /**
      * Draw the score display in a given position
      *
-     * @param colPos Column position
-     * @param rowPos Row position
+     * @param colPos     Column position
+     * @param rowPos     Row position
      * @param playerInfo Player name + time flag
      */
     private static void score(int colPos, int rowPos, String playerInfo) {
-        screenWriter.setBackgroundColor(EnumColors.getColorById(7));
-        screenWriter.setForegroundColor(EnumColors.getColorById(0));
+        screenWriter.setBackgroundColor(EnumColors.WHITE.getColor());
+        screenWriter.setForegroundColor(EnumColors.BLACK.getColor());
 
         screenWriter.drawString(colPos, rowPos, playerInfo);
     }
 
-    public static void drawMap(String[] map){
+    public static void drawMap(String[] map) {
 
         int row = 0;
-        for (String value: map) {
+        for (String value : map) {
             for (int col = 0; col < value.length(); col++) {
                 if (value.charAt(col) != '0') {
-                    screenWriter.setBackgroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
-                    screenWriter.setForegroundColor(EnumColors.getColorById(Character.getNumericValue(value.charAt(col))));
+                    screenWriter.setBackgroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
+                    screenWriter.setForegroundColor(EnumColors.getColorById(Integer.parseInt(value.charAt(col) + "")));
 
                     screenWriter.drawString(col, row, "\u2588"); // █ BLOCK CHAR
                 }
@@ -140,8 +190,8 @@ public final class Board {
     public static void simpleDraw(String[] text) {
         screen.clear();
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-        screenWriter.setForegroundColor(EnumColors.getColorById(7));
+        screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+        screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
         // Draw all string of the array
         for (int i = 0; i < text.length; i++) {
@@ -155,36 +205,31 @@ public final class Board {
     /**
      * Draw the time of the game
      *
-     * @param colPos Column position
-     * @param rowPos Row position
      * @param elapsedTime Time passed since the beginning of the game
      */
-    private static void drawTime(int colPos, int rowPos, String elapsedTime) {
+    public static void drawTime(String elapsedTime) {
+        Terminal.Color foregroundColor = EnumColors.BLACK.getColor();
+        Terminal.Color backgroundColor = EnumColors.WHITE.getColor();
 
-        int foregroundColor = 0;
-        int backgroundColor = 7;
+        screenWriter.setBackgroundColor(backgroundColor);
+        screenWriter.setForegroundColor(foregroundColor);
 
-        if (gameTime.isLast10Seconds()) {
-            foregroundColor = 7;
-            backgroundColor = 2;
-        }
+        screenWriter.drawString(gameTime.getColPos() - (elapsedTime.length() / 2), gameTime.getRowPos(), elapsedTime);
 
-        screenWriter.setBackgroundColor(EnumColors.getColorById(backgroundColor));
-        screenWriter.setForegroundColor(EnumColors.getColorById(foregroundColor));
-
-        screenWriter.drawString(colPos, rowPos, elapsedTime);
+        screen.refresh();
     }
 
     /**
      * Animate an array of strings on the screen
      *
-     * @param text Text to animate
-     * @param stopAnimationAt Where the text stops
+     * @param text            Text to animate
      */
-    public static void animation(String[] text, int stopAnimationAt) {
+    public static void animation(String[] text) {
         // Start point of the text
         // Used to move text width
         int rowVelocity = 100;
+
+        int stopAnimationAt = -text[0].length();
 
         long lastTime = 0;
 
@@ -196,8 +241,8 @@ public final class Board {
 
                 screen.clear();
 
-                screenWriter.setBackgroundColor(EnumColors.getColorById(0));
-                screenWriter.setForegroundColor(EnumColors.getColorById(7));
+                screenWriter.setBackgroundColor(EnumColors.BLACK.getColor());
+                screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
 
                 // Draw all string of the array
                 for (int i = 0; i < text.length; i++) {
@@ -210,6 +255,7 @@ public final class Board {
                 lastTime = currentTime + 10000000;
             }
         }
+
     }
 
     /**
@@ -217,14 +263,25 @@ public final class Board {
      *
      * @return Screen width(Rows)
      */
+    public static Screen getScreen() {
+        return screen;
+    }
+
+    public static void setMessageTime(String message) {
+        messageTime = message;
+    }
 
     public static int getWidth() {
         return width;
     }
 
-    public static Key getKey() {return key; }
+    public static Key getKey() {
+        return key;
+    }
 
-    public static void setAllPlayersPositions(String[] positions){
+    public static void setAllPlayersPositions(String[] positions) {
         allPlayersPositions = positions;
     }
+
+    public static void setFlagPosition(int[] position){flagPosition = position;}
 }

@@ -1,7 +1,10 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
+import org.academiadecodigo.howlongcanyoulast.client.Board;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
+import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
@@ -25,33 +28,67 @@ public class Game {
 
     private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
+    private Flag flag;                                          //flag object
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
 
     private UDPServer myServer;
 
+    private String[] map;
 
-    public Game(int cols, int rows) {
-
-        this.cols = cols;
-        this.rows = rows;
-        playerNames = new String[4];
+    public Game() {
+        playerNames = new String[UDPServer.MAX_PLAYERS];
         myServer = new UDPServer(this);
         new Thread(myServer).start();
         playerStartPositions = new LinkedList<>();
     }
 
-    public void init(int totalPlayers){
+    public void init(DificultyType dificultyType , int totalPlayers){
 
-        positionsList = new ConcurrentHashMap<>();
+        synchronized (myServer.getClientList()) {
+            positionsList = new ConcurrentHashMap<>();
 
-        String[] map = FileTools.fileRead("map2.txt");
+            map = FileTools.fileRead("map2.txt");
 
-        storeInitialInfo(map);
+            cols = map[0].length();
+            rows = map.length;
 
-        gameTime = new GameTime(totalPlayers);
-        scores = new Scores(totalPlayers);
+            storeInitialInfo(map);
+            putFlag();
 
+            gameTime = new GameTime(totalPlayers);
+            scores = new Scores(totalPlayers);
+
+            while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
+                try {
+                    myServer.getClientList().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            myServer.sendToAll("start");
+            myServer.sendToAll(putFlag());
+
+            String map2 = "";
+            for (int i = 0; i < map.length; i++) {
+                map2 += map[i] + " ";
+
+            }
+            System.out.println(map2);
+            myServer.sendToAll(map2);
+            myServer.sendToAll("!Game duration "+ gameTime.getGameDuration() + " minute");
+
+            try {
+
+                Thread.sleep(2000);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            gameTime.setStartTime();
+        }
     }
 
     /**
@@ -67,6 +104,11 @@ public class Game {
 
         }
     }
+//TODO Amauri
+    public String putFlag(){
+        flag = new Flag(cols/2, rows/2);
+        return "flag" + flag.getPos().getCol() + ":" + flag.getPos().getRow();
+    }
 
     /**
      *
@@ -75,41 +117,41 @@ public class Game {
      * @return the updated position, Either the position where he was in case of failure or the new position if the check's succeeds
      */
 
-    private Position movePlayer(String name, Direction whereTo) {
+    public void movePlayer(String name, Direction whereTo) {
 
         Position playerPos = positionsList.get(name).getPos();
 
         switch (whereTo) {
 
-            case UP:
+            case LEFT:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() - 1, playerPos.getRow()), wallsLocations)) {
                     playerPos.setCol(playerPos.getCol() - 1);
                 }
                 break;
 
-            case DOWN:
+            case RIGHT:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() + 1, playerPos.getRow()), wallsLocations)) {
                     playerPos.setCol(playerPos.getCol() + 1);
                 }
                 break;
 
-            case LEFT:
+            case UP:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() - 1), wallsLocations)) {
                     playerPos.setRow(playerPos.getRow() - 1);
                 }
                 break;
-            case RIGHT:
+            case DOWN:
                 if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() + 1), wallsLocations)) {
                     playerPos.setRow(playerPos.getRow() + 1);
                 }
                 break;
             default:
                 System.out.println("Something went wrong in the movePlayer()!");
-                return null;
+                break;
 
         }
 
-        return playerPos;
+        positionsList.get(name).setPos(playerPos);
 
     }
 
@@ -154,6 +196,14 @@ public class Game {
         return positionsList.get(playerName).getPos();
     }
 
+    public String getTime() {
+        return gameTime.getGameTime();
+    }
+
+    public String generateFirstString() {
+        return map[0].length() + "," + map.length;
+    }
+
     private void storeInitialInfo(String[] str) {
         wallsLocations = new ArrayList<>();
         String tempString;
@@ -171,5 +221,9 @@ public class Game {
                 }
             }
         }
+    }
+
+    public Flag getFlag() {
+        return flag;
     }
 }
