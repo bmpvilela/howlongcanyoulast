@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 public class UDPServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 3;
     private DatagramSocket serverSocket;
 
     private Game game;
@@ -35,7 +35,7 @@ public class UDPServer implements Runnable {
 
         serverSocket = null;
 
-        ExecutorService pool = Executors.newFixedThreadPool(4);
+        ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
 
         try {
             serverSocket = new DatagramSocket(8080);
@@ -59,6 +59,7 @@ public class UDPServer implements Runnable {
                             synchronized (clientList) {
                                 clientList.put(receivePacket.getAddress(), ct);
                                 clientList.notifyAll();
+
                             }
 
                             pool.submit(ct);

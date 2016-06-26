@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
+import org.academiadecodigo.howlongcanyoulast.game.GameTextType;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ public class Read implements Runnable{
             // TODO Andre removi souts, acho eu.... Ver so pelo sim pelo nao
             if (fromServer.length() > 100) {
                 controller.initMap(fromServer);
+            } else if (fromServer.equals("waiting")) {
+
+                Board.simpleDraw(GameTextType.getText(GameTextType.WAITING));
+
             } else {
                 controller.setPlayersData(fromServer);
                 //TODO Start time

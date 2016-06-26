@@ -56,6 +56,7 @@ public class Game {
 
             while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
                 try {
+                    myServer.sendToAll("waiting");
                     myServer.getClientList().wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
