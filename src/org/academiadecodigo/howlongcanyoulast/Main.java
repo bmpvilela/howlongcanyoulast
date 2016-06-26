@@ -19,7 +19,7 @@ public class Main {
 
             switch (args[0].toUpperCase()) {
                 case "CLIENT":
-                    Controller controller = new Controller(InetAddress.getByName("127.0.0.1") ,8080);
+                    Controller controller = new Controller(InetAddress.getByName("192.168.1.21") ,8080);
                     break;
 
                 case "SERVER":
