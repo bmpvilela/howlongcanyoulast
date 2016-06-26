@@ -4,6 +4,7 @@ import org.academiadecodigo.howlongcanyoulast.client.Board;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
+import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
@@ -42,7 +43,7 @@ public class Game {
         playerStartPositions = new LinkedList<>();
     }
 
-    public void init(int totalPlayers){
+    public void init(DificultyType dificultyType , int totalPlayers){
 
         synchronized (myServer.getClientList()) {
             positionsList = new ConcurrentHashMap<>();

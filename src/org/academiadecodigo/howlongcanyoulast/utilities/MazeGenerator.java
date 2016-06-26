@@ -117,8 +117,6 @@ public class MazeGenerator {
 
         }
 
-
-
     }
 
     //how many walls there are in the vicinity
@@ -174,8 +172,5 @@ public class MazeGenerator {
 
             }
         }
-
     }
-
-
 }
