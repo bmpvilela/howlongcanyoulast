@@ -24,18 +24,16 @@ public class Read implements Runnable{
 
 
         while(true) {
-            System.out.println("w");
-
             String fromServer = receiveFromServer();
 
             System.out.println("Data from Server: " + fromServer);
 
+            // TODO Andre removi souts, acho eu.... Ver so pelo sim pelo nao
             if (fromServer.length() > 100) {
                 controller.initMap(fromServer);
             } else {
                 controller.setPlayersData(fromServer);
                 //TODO Start time
-                System.out.println("s");
             }
         }
     }
