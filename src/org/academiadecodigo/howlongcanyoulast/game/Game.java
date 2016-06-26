@@ -30,6 +30,7 @@ public class Game {
 
     private UDPServer myServer;
 
+    private String[] map;
 
     public Game(int cols, int rows) {
 
@@ -47,7 +48,7 @@ public class Game {
 
             positionsList = new ConcurrentHashMap<>();
 
-            String[] map = FileTools.fileRead("map2.txt");
+            map = FileTools.fileRead("map2.txt");
 
             storeInitialInfo(map);
 
@@ -57,12 +58,11 @@ public class Game {
             while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
                 try {
                     myServer.getClientList().wait();
-                    myServer.sendToAll(map[0].length() + "," + map.length);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            myServer.sendToAll(map[0].length() + "," + map.length);
+
             myServer.sendToAll("start");
 
             String map2 = "";
@@ -176,6 +176,10 @@ public class Game {
      */
     private Position getPlayerPosition(String playerName) {
         return positionsList.get(playerName).getPos();
+    }
+
+    public String generateFirstString() {
+        return map[0].length() + "," + map.length;
     }
 
     private void storeInitialInfo(String[] str) {

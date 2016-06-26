@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 public class UDPServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 3;
     private DatagramSocket serverSocket;
 
     private Game game;
@@ -120,6 +120,7 @@ public class UDPServer implements Runnable {
             this.packet = packet;
             name = "" + packet.getAddress();
             game.putPlayer(name);
+            send(game.generateFirstString());
         }
 
         @Override
