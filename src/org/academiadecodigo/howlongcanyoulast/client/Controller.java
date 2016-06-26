@@ -63,7 +63,7 @@ public class Controller {
 
         String[] mapToFeed = map.split(" ");
 
-        Board.init(mapToFeed);
+       Board.init(mapToFeed);
 
         new Thread(new Runnable() {
             @Override

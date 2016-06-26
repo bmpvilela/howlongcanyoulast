@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
+import org.academiadecodigo.howlongcanyoulast.client.Board;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
@@ -25,6 +27,7 @@ public class Game {
 
     private ConcurrentHashMap<String, Player> positionsList;   //Players positions - Key(String) is Player Name
     private ArrayList<Position> wallsLocations;                 //Walls location for collisions
+    private Flag flag;                                          //flag object
     private String[] playerNames;
     private LinkedList<Position> playerStartPositions;
 
@@ -45,12 +48,13 @@ public class Game {
     public void init(int totalPlayers){
 
         synchronized (myServer.getClientList()) {
-
             positionsList = new ConcurrentHashMap<>();
 
             map = FileTools.fileRead("map2.txt");
 
+            String[] map = FileTools.fileRead("map2.txt");
             storeInitialInfo(map);
+            putFlag();
 
             gameTime = new GameTime(totalPlayers);
             scores = new Scores(totalPlayers);
@@ -69,7 +73,7 @@ public class Game {
                 map2 += map[i] + " ";
 
             }
-
+            System.out.println(map2);
             myServer.sendToAll(map2);
             myServer.sendToAll("!Game duration "+ gameTime.getGameDuration() + " minute");
 
@@ -82,6 +86,7 @@ public class Game {
             }
 
             gameTime.setStartTime();
+            myServer.sendToAll(putFlag());
         }
     }
 
@@ -97,6 +102,11 @@ public class Game {
             positionsList.put(name, new Player(name, position.getCol(),position.getRow()));
 
         }
+    }
+//TODO Amauri
+    public String putFlag(){
+        flag = new Flag(cols/2, rows/2);
+        return "flag" + flag.getPos().getCol() + ":" + flag.getPos().getRow();
     }
 
     /**
@@ -210,5 +220,9 @@ public class Game {
                 }
             }
         }
+    }
+
+    public Flag getFlag() {
+        return flag;
     }
 }

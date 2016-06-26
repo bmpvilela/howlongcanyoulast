@@ -37,6 +37,8 @@ public final class Board {
     private static ScreenWriter screenWriter;
 
     private static String[] allPlayersPositions;
+    //Amauri: the position flag will have
+    private static int[] flagPosition;
 
     private static GameTime gameTime;
 
@@ -99,13 +101,21 @@ public final class Board {
      */
     public static void draw() {
         screen.clear();
-
         drawMap(map);
         drawScores();
         drawPlayers();
         drawTime(messageTime);
 
+        drawFlag();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
+        screen.refresh();
+    }
+
+    //TODO Amauri
+    private static void drawFlag(){
+        screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+        screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
+        screenWriter.drawString(flagPosition[0], flagPosition[1], "\u2588");
         screen.refresh();
     }
 
@@ -272,4 +282,6 @@ public final class Board {
     public static void setAllPlayersPositions(String[] positions) {
         allPlayersPositions = positions;
     }
+
+    public static void setFlagPosition(int[] position){flagPosition = position;}
 }
