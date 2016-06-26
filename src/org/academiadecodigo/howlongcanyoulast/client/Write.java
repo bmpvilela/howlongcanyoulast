@@ -11,7 +11,7 @@ import java.net.*;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class Write implements Runnable  {
+public class Write implements Runnable {
 
     DatagramSocket clientSocket = null;
     private InetAddress serverAdress;
@@ -21,11 +21,12 @@ public class Write implements Runnable  {
     Scores score;
     GameTime gameTime;
 
-    public Write(InetAddress serverAdress, int port , Controller controller) throws SocketException {
+    public Write(InetAddress serverAdress, int port, Controller controller, DatagramSocket clientSocket) throws SocketException {
 
         this.controller = controller;
         this.serverAdress = serverAdress;
         this.port = port;
+        this.clientSocket = clientSocket;
 
         System.out.println("Created");
 
@@ -34,28 +35,33 @@ public class Write implements Runnable  {
     @Override
     public void run() {
 
-        while(true) {
-            Key value = Board.getKey();
+        try {
 
-            if(value != null){
-                System.out.println((byte)value.getCharacter());
+            clientSocket.send(new DatagramPacket(new byte[10], 10, serverAdress, port));
 
-                byte[] sendBuffer = {(byte)value.getCharacter()};
-                DatagramPacket packet;
 
-                try {
-                    packet = new DatagramPacket(sendBuffer,sendBuffer.length, serverAdress, port);
+            while (true) {
+                Key value = Board.getKey();
+
+                if (value != null) {
+                    System.out.println((byte) value.getCharacter());
+
+                    byte[] sendBuffer = {(byte) value.getCharacter()};
+                    DatagramPacket packet;
+
+                    packet = new DatagramPacket(sendBuffer, sendBuffer.length, serverAdress, port);
                     System.out.println("waiting to send");
                     clientSocket.send(packet);
                     System.out.println("sent");
-                } catch (IOException e) {
-                    System.out.println("Fail to send packet");
+
                 }
             }
+        } catch (IOException e) {
+            System.out.println("Fail to send packet");
         }
     }
 
-    public byte convertToByte(char direction){
+    public byte convertToByte(char direction) {
         switch (direction) {
             case 'L':
                 return 1;

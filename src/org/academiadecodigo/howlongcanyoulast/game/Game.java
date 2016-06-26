@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.academiadecodigo.howlongcanyoulast.Scores;
+import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -33,6 +34,7 @@ public class Game {
     private LinkedList<Position> playerStartPositions;
 
     private UDPServer myServer;
+    private MazeGenerator mazeGenerator;
 
     private String[] map;
 
@@ -47,6 +49,9 @@ public class Game {
 
         synchronized (myServer.getClientList()) {
             positionsList = new ConcurrentHashMap<>();
+
+            mazeGenerator = new MazeGenerator(80,30,dificultyType);
+            mazeGenerator.GenerateMap();
 
             map = FileTools.fileRead("map2.txt");
 

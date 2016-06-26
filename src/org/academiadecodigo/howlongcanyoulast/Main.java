@@ -1,12 +1,10 @@
 package org.academiadecodigo.howlongcanyoulast;
 
 import org.academiadecodigo.howlongcanyoulast.client.Controller;
-import org.academiadecodigo.howlongcanyoulast.client.Write;
 import org.academiadecodigo.howlongcanyoulast.game.Game;
 import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
