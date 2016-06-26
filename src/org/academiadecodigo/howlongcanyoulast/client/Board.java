@@ -110,20 +110,26 @@ public final class Board {
         if (allPlayersPositions != null) {
             //System.out.println(Arrays.toString(allPlayersPositions));
             // TODO Andre player movimento, AKA desenhar
-            screenWriter.setBackgroundColor(EnumColors.RED.getColor());
-            screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
 
-            try {
+            for (int i = 0; i < allPlayersPositions.length; i += 3) {
 
-                if (("/" + InetAddress.getLocalHost().getHostAddress()).equals(allPlayersPositions[0])) {
-                    screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
+                if (allPlayersPositions[i] == null) break;
+
+                screenWriter.setBackgroundColor(EnumColors.RED.getColor());
+                screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
+
+                try {
+
+                    if (("/" + InetAddress.getLocalHost().getHostAddress()).equals(allPlayersPositions[i])) {
+                        screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
+                    }
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
+                screenWriter.drawString(Integer.parseInt(allPlayersPositions[i + 1]), Integer.parseInt(allPlayersPositions[i + 2]), "\u2588");
             }
-
-            screenWriter.drawString(Integer.parseInt(allPlayersPositions[1]), Integer.parseInt(allPlayersPositions[2]), "\u2588");
         }
     }
 
