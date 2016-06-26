@@ -4,6 +4,7 @@ import org.academiadecodigo.howlongcanyoulast.client.Board;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
 import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
 import org.academiadecodigo.howlongcanyoulast.server.UDPServer;
+import org.academiadecodigo.howlongcanyoulast.utilities.DificultyType;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
 import org.academiadecodigo.howlongcanyoulast.utilities.FileTools;
 
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.academiadecodigo.howlongcanyoulast.Scores;
+import org.academiadecodigo.howlongcanyoulast.utilities.MazeGenerator;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -32,6 +34,7 @@ public class Game {
     private LinkedList<Position> playerStartPositions;
 
     private UDPServer myServer;
+    private MazeGenerator mazeGenerator;
 
     private String[] map;
 
@@ -42,10 +45,13 @@ public class Game {
         playerStartPositions = new LinkedList<>();
     }
 
-    public void init(int totalPlayers){
+    public void init(DificultyType dificultyType , int totalPlayers){
 
         synchronized (myServer.getClientList()) {
             positionsList = new ConcurrentHashMap<>();
+
+            mazeGenerator = new MazeGenerator(80,30,dificultyType);
+            mazeGenerator.GenerateMap();
 
             map = FileTools.fileRead("map2.txt");
 
