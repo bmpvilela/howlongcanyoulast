@@ -50,8 +50,11 @@ public class Game {
             positionsList = new ConcurrentHashMap<>();
             String[] map = FileTools.fileRead("map2.txt");
             storeInitialInfo(map);
+            putFlag();
+
             gameTime = new GameTime(totalPlayers);
             scores = new Scores(totalPlayers);
+
            //TODO maybe this method shouldnt be here putFlag();
 
             while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS-2) {
@@ -71,7 +74,7 @@ public class Game {
             }
             System.out.println(map2);
             myServer.sendToAll(map2);
-
+            myServer.sendToAll(putFlag());
         }
     }
 
@@ -89,10 +92,9 @@ public class Game {
         }
     }
 //TODO Amauri
-    public void putFlag(){
+    public String putFlag(){
         flag = new Flag(cols/2, rows/2);
-        int[] initialPosition = {flag.getPos().getCol(),flag.getPos().getRow()};
-        Board.setFlagPosition(initialPosition);
+        return "flag" + flag.getPos().getCol() + ":" + flag.getPos().getRow();
     }
 
     /**

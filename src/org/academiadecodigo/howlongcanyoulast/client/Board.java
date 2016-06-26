@@ -98,12 +98,12 @@ public final class Board {
      */
     public static void draw() {
         screen.clear();
-
         drawMap(map);
         drawTime(gameTime.getColPos(), gameTime.getRowPos(), gameTime.getGameTime());
         drawScores();
         drawPlayers();
-        //System.out.println(""+ flagPosition[0] +" "+ flagPosition[1]);
+        // System.out.println(""+ flagPosition[0] +" "+ flagPosition[1]);
+
         drawFlag();
 
         screenWriter.setBackgroundColor(Terminal.Color.RED);
@@ -113,9 +113,9 @@ public final class Board {
     //TODO Amauri
     private static void drawFlag(){
         screenWriter.setBackgroundColor(EnumColors.RED.getColor());
-        screenWriter.setForegroundColor(EnumColors.GREEN.getColor());
         screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
         screenWriter.drawString(flagPosition[0], flagPosition[1], "\u2588");
+        screen.refresh();
     }
 
     private static void drawPlayers() {
@@ -285,5 +285,5 @@ public final class Board {
         allPlayersPositions = positions;
     }
 
-    public static void etFlagPosition(int[] position){flagPosition = position;}
+    public static void setFlagPosition(int[] position){flagPosition = position;}
 }

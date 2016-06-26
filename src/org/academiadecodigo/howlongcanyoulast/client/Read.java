@@ -5,6 +5,7 @@ import org.academiadecodigo.howlongcanyoulast.game.GameTextType;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -37,6 +38,11 @@ public class Read implements Runnable{
             } else if (fromServer.equals("waiting")) {
 
                 Board.simpleDraw(GameTextType.getText(GameTextType.WAITING));
+
+            } else if (fromServer.contains("flag")) {
+
+                String[] flagPos = fromServer.split("flag")[1].split(":");
+                Board.setFlagPosition(new int[]{Integer.parseInt(flagPos[0]), Integer.parseInt(flagPos[1])});
 
             } else {
                 controller.setPlayersData(fromServer);
