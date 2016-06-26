@@ -26,7 +26,7 @@ public class Main {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Game game = new Game(100, 25);
+                            Game game = new Game();
                             game.init(4);
                         }
                     }).start();

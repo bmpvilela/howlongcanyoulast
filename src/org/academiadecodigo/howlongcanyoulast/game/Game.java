@@ -35,10 +35,7 @@ public class Game {
 
     private String[] map;
 
-    public Game(int cols, int rows) {
-
-        this.cols = cols;
-        this.rows = rows;
+    public Game() {
         playerNames = new String[UDPServer.MAX_PLAYERS];
         myServer = new UDPServer(this);
         new Thread(myServer).start();
@@ -52,7 +49,9 @@ public class Game {
 
             map = FileTools.fileRead("map2.txt");
 
-            String[] map = FileTools.fileRead("map2.txt");
+            cols = map[0].length();
+            rows = map.length;
+
             storeInitialInfo(map);
             putFlag();
 
@@ -68,6 +67,8 @@ public class Game {
             }
 
             myServer.sendToAll("start");
+            myServer.sendToAll(putFlag());
+
             String map2 = "";
             for (int i = 0; i < map.length; i++) {
                 map2 += map[i] + " ";
@@ -86,7 +87,6 @@ public class Game {
             }
 
             gameTime.setStartTime();
-            myServer.sendToAll(putFlag());
         }
     }
 

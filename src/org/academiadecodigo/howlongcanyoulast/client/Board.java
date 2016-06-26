@@ -101,12 +101,13 @@ public final class Board {
      */
     public static void draw() {
         screen.clear();
+
         drawMap(map);
+        drawFlag();
         drawScores();
         drawPlayers();
         drawTime(messageTime);
 
-        drawFlag();
         screenWriter.setBackgroundColor(Terminal.Color.RED);
         screen.refresh();
     }
@@ -114,9 +115,8 @@ public final class Board {
     //TODO Amauri
     private static void drawFlag(){
         screenWriter.setBackgroundColor(EnumColors.RED.getColor());
-        screenWriter.setForegroundColor(EnumColors.YELLOW.getColor());
-        screenWriter.drawString(flagPosition[0], flagPosition[1], "\u2588");
-        screen.refresh();
+        screenWriter.setForegroundColor(EnumColors.WHITE.getColor());
+        screenWriter.drawString(flagPosition[0], flagPosition[1], "F");
     }
 
     private static void drawPlayers() {
