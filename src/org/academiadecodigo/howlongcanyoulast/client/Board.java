@@ -90,6 +90,26 @@ public final class Board {
 
     }
 
+    public static void initScreen(int col, int row) {
+        // Create the GUI
+        screen = TerminalFacade.createScreen();
+
+        // Set field size
+        width = col;
+        height = row;
+
+        screen.getTerminal().setCursorVisible(false); // Not Working
+        screen.getTerminal().getTerminalSize().setColumns(width);
+        screen.getTerminal().getTerminalSize().setRows(height);
+
+        // Default screen writing options
+        screenWriter = new ScreenWriter(screen);
+        screenWriter.setBackgroundColor(Terminal.Color.RED);
+        screenWriter.setForegroundColor(Terminal.Color.WHITE);
+
+        screen.startScreen();
+    }
+
     /**
      * Displays a group of cars in the screen
      */

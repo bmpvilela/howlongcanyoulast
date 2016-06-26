@@ -56,12 +56,14 @@ public class Game {
 
             while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
                 try {
-                    myServer.sendToAll("waiting");
+                    myServer.sendToAll(map[0].length() + "," + map.length);
                     myServer.getClientList().wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+
+            myServer.sendToAll("start");
 
             String map2 = "";
             for (int i = 0; i < map.length; i++) {

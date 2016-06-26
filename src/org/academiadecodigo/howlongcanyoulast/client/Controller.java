@@ -31,9 +31,6 @@ public class Controller {
 
         // TODO Andre var don't do nothing... data nao estava a ser usada
 
-
-
-
         //rawPlayersData = "";
         Board.setAllPlayersPositions(dividPositionsData(data));
     }
