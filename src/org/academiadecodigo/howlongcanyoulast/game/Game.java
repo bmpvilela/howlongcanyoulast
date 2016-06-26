@@ -38,14 +38,14 @@ public class Game {
 
     private String[] map;
 
-    public Game() {
-        playerNames = new String[UDPServer.MAX_PLAYERS];
-        myServer = new UDPServer(this);
+    public Game(int totalPlayers) {
+        myServer = new UDPServer(this, totalPlayers);
         new Thread(myServer).start();
+        playerNames = new String[myServer.getMaxPlayers()];
         playerStartPositions = new LinkedList<>();
     }
 
-    public void init(DificultyType dificultyType , int totalPlayers){
+    public void init(DificultyType dificultyType){
 
         synchronized (myServer.getClientList()) {
             positionsList = new ConcurrentHashMap<>();
@@ -61,10 +61,10 @@ public class Game {
             storeInitialInfo(map);
             putFlag();
 
-            gameTime = new GameTime(totalPlayers);
-            scores = new Scores(totalPlayers);
+            gameTime = new GameTime(myServer.getMaxPlayers());
+            scores = new Scores(myServer.getMaxPlayers());
 
-            while (myServer.getPlayerAmount() != UDPServer.MAX_PLAYERS) {
+            while (myServer.getPlayerAmount() != myServer.getMaxPlayers()) {
                 try {
                     myServer.getClientList().wait();
                 } catch (InterruptedException e) {

@@ -17,13 +17,14 @@ import java.util.concurrent.Executors;
  */
 public class UDPServer implements Runnable {
 
-    public static final int MAX_PLAYERS = 2;
+    private int maxPlayers;
     private DatagramSocket serverSocket;
 
     private Game game;
     private HashMap<InetAddress, ClientThread> clientList;
 
-    public UDPServer(Game game) {
+    public UDPServer(Game game, int maxPlayers) {
+        this.maxPlayers = maxPlayers;
         this.game = game;
         clientList = new HashMap<>();
 
@@ -35,7 +36,7 @@ public class UDPServer implements Runnable {
 
         serverSocket = null;
 
-        ExecutorService pool = Executors.newFixedThreadPool(MAX_PLAYERS);
+        ExecutorService pool = Executors.newFixedThreadPool(maxPlayers);
 
         try {
             serverSocket = new DatagramSocket(8080);
@@ -52,7 +53,7 @@ public class UDPServer implements Runnable {
                     @Override
                     public void run() {
 
-                        if (!clientList.containsKey(receivePacket.getAddress()) && clientList.size() < MAX_PLAYERS) {
+                        if (!clientList.containsKey(receivePacket.getAddress()) && clientList.size() < maxPlayers) {
 
                             ClientThread ct = new ClientThread(receivePacket);
 
@@ -174,6 +175,10 @@ public class UDPServer implements Runnable {
 
     public int getPlayerAmount(){
         return clientList.size();
+    }
+
+    public int getMaxPlayers(){
+        return maxPlayers;
     }
 }
 

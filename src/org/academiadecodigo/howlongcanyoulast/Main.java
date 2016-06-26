@@ -64,8 +64,8 @@ public class Main {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Game game = new Game();
-                game.init(DificultyType.valueOf(args[1].toUpperCase()), Integer.parseInt(args[2]));
+                Game game = new Game(Integer.parseInt(args[2]));
+                game.init(DificultyType.valueOf(args[1].toUpperCase()));
             }
         }).start();
     }
@@ -101,8 +101,8 @@ public class Main {
 
         System.out.println("[ERROR] Invalid argument(s)");
         System.out.println("---------------------------");
-        System.out.println("For server use: SERVER DIFICULTY NUMPLAYERS");
-        System.out.println("DIFICULTY OPTIONS: BABY, EASY, NORMAL, IMPOSSIBRU");
+        System.out.println("For server use: SERVER DIFFICULTY NUMPLAYERS");
+        System.out.println("DIFFICULTY OPTIONS: BABY, EASY, NORMAL, IMPOSSIBRU");
         System.out.println("NUMPLAYERS OPTIONS: 2-4");
         System.out.println("Example: SERVER EASY 2");
         System.out.println("---------------------------");
