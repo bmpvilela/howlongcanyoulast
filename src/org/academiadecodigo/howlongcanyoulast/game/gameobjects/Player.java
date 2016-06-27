@@ -1,7 +1,6 @@
 package org.academiadecodigo.howlongcanyoulast.game.gameobjects;
 
-import org.academiadecodigo.howlongcanyoulast.game.Position;
-import org.academiadecodigo.howlongcanyoulast.game.gameobjects.GameObjects;
+import org.academiadecodigo.howlongcanyoulast.Main;
 
 /**
  * Created by codecadet on 24/06/16.
@@ -10,6 +9,7 @@ public class Player extends GameObjects {
 
     private String name;
     private boolean hasFlag;
+
 
 
 
@@ -32,4 +32,5 @@ public class Player extends GameObjects {
     public boolean hasFlag(){
         return hasFlag;
     }
+
 }
