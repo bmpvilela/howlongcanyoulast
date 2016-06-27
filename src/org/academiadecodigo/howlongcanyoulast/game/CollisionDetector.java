@@ -40,11 +40,8 @@ public abstract class CollisionDetector {
 
     public static boolean flagPlayerCollision(Flag flag, Player challenger) {
 
-            if (flagCollision(flag, challenger)) {
-                return true;
-            }
+            return flagCollision(flag,challenger);
 
-        return false;
     }
 
 

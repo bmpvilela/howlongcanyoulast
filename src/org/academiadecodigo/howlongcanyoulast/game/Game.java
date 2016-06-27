@@ -162,17 +162,23 @@ public class Game {
 
         if(!flag.isFlagTaken()) {
             if(CollisionDetector.flagCollision(flag, player)){
+                System.out.println("Flag taken first time");
                 hasFlag = player;
                 flag.setFlagTaken(true);
                 positionsList.get(name).setHasFlag(true);
+                flag.setPos(player.getPos());
             }
 
         } else if(flag.isFlagTaken()) {
-            CollisionDetector.flagPlayerCollision(flag,player);
-            hasFlag.setHasFlag(false);
-            hasFlag = player;
-            player.setHasFlag(true);
-            flag.setPos(player.getPos());
+            if(CollisionDetector.flagPlayerCollision(flag,player)) {
+                System.out.println("Flag switched");
+                System.out.println("Flag guy Col: " + hasFlag.getPos().getCol() + " Row: " + hasFlag.getPos().getRow() + "\nName: " + hasFlag.getName());
+                System.out.println("Challenger Col: " + player.getPos().getCol() + " Row: " + player.getPos().getRow() + "\nName: " + player.getName());
+                hasFlag.setHasFlag(false);
+                hasFlag = player;
+                player.setHasFlag(true);
+                flag.setPos(player.getPos());
+            }
         }
     }
 

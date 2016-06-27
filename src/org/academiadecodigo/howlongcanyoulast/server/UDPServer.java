@@ -47,9 +47,9 @@ public class UDPServer implements Runnable {
             while (true) {
 
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-                //System.out.println("waiting to receive");
+                System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
-                //System.out.println("Received");
+                System.out.println("Received");
 
                 Thread t = new Thread(new Runnable() {
                     @Override

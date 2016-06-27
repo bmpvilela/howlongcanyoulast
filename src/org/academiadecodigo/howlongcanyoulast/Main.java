@@ -88,7 +88,6 @@ public class Main {
      *
      */
     private static boolean isNumPlayersValid(String nP){
-// TODO AQUI pa a 2
         if (Integer.parseInt(nP) >= 2 &&  Integer.parseInt(nP) <=4 ) return true;
         return false;
     }
