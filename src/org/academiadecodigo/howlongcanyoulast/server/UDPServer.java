@@ -1,6 +1,8 @@
 package org.academiadecodigo.howlongcanyoulast.server;
 
+import org.academiadecodigo.howlongcanyoulast.client.Board;
 import org.academiadecodigo.howlongcanyoulast.game.Game;
+import org.academiadecodigo.howlongcanyoulast.game.GameTextType;
 import org.academiadecodigo.howlongcanyoulast.utilities.Direction;
 
 import java.io.IOException;
@@ -45,9 +47,9 @@ public class UDPServer implements Runnable {
             while (true) {
 
                 DatagramPacket receivePacket = new DatagramPacket(data, data.length);
-                System.out.println("waiting to receive");
+                //System.out.println("waiting to receive");
                 serverSocket.receive(receivePacket);
-                System.out.println("Received");
+                //System.out.println("Received");
 
                 Thread t = new Thread(new Runnable() {
                     @Override
@@ -72,12 +74,17 @@ public class UDPServer implements Runnable {
 
                         }
                     }
+
                 });
 
                 t.start();
 
-            }
+                if (clientList.size() == maxPlayers && game.isGameOver()) {
+                    sendToAll("gameOver");
+                    break;
+                }
 
+            }
 
         } catch (SocketException e) {
             e.printStackTrace();

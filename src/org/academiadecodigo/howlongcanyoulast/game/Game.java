@@ -80,9 +80,9 @@ public class Game {
                 map2 += map[i] + " ";
 
             }
-            System.out.println(map2);
+            //System.out.println(map2);
             myServer.sendToAll(map2);
-            myServer.sendToAll("!Game duration "+ gameTime.getGameDuration() + " minute");
+            myServer.sendToAll("!Game duration "+ (gameTime.getGameDuration() + 1) + " minute");
 
             try {
 
@@ -157,7 +157,7 @@ public class Game {
         }
 
         positionsList.get(name).setPos(playerPos);
-
+        CollisionDetector.flagCollision(flag, positionsList);
     }
 
 
@@ -186,7 +186,7 @@ public class Game {
 
         String positions = "";
         for (ConcurrentHashMap.Entry<String, Player> entry : positionsList.entrySet()) {
-            positions = positions + entry.getKey() + ":" + entry.getValue().getPos().getCol() + ":" + entry.getValue().getPos().getRow() + " ";
+            positions = positions + entry.getKey() + ":" + entry.getValue().getPos().getCol() + ":" + entry.getValue().getPos().getRow() + ":" + entry.getValue().hasFlag() + " ";
         }
 
         return positions;
@@ -201,8 +201,8 @@ public class Game {
         return positionsList.get(playerName).getPos();
     }
 
-    public String getTime() {
-        return gameTime.getGameTime();
+    public boolean isGameOver() {
+        return gameTime.isGameOver();
     }
 
     public String generateFirstString() {

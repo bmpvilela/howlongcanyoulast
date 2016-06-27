@@ -28,7 +28,7 @@ public class Write implements Runnable {
         this.port = port;
         this.clientSocket = clientSocket;
 
-        System.out.println("Created");
+        //System.out.println("Created");
 
     }
 
@@ -44,15 +44,15 @@ public class Write implements Runnable {
                 Key value = Board.getKey();
 
                 if (value != null) {
-                    System.out.println((byte) value.getCharacter());
+                    //System.out.println((byte) value.getCharacter());
 
                     byte[] sendBuffer = {(byte) value.getCharacter()};
                     DatagramPacket packet;
 
                     packet = new DatagramPacket(sendBuffer, sendBuffer.length, serverAdress, port);
-                    System.out.println("waiting to send");
+                    //System.out.println("waiting to send");
                     clientSocket.send(packet);
-                    System.out.println("sent");
+                    //System.out.println("sent");
 
                 }
             }

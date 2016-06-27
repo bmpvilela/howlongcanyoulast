@@ -1,5 +1,7 @@
 package org.academiadecodigo.howlongcanyoulast.client;
 
+import org.academiadecodigo.howlongcanyoulast.game.GameTextType;
+
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -17,6 +19,7 @@ public class Controller {
     private Write clientWrite;
     private DatagramSocket clientSocket;
     private String rawPlayersData;
+    private boolean isGameOver = false;
 
     public Controller(InetAddress serverAdress, int port) throws SocketException {
         clientSocket = new DatagramSocket();
@@ -59,6 +62,10 @@ public class Controller {
         dividPositionsData(inicialPositions);
     }
 
+    public void setGameOver() {
+        isGameOver = true;
+    }
+
     public void initMap(String map){
 
         String[] mapToFeed = map.split(" ");
@@ -68,9 +75,11 @@ public class Controller {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(!isGameOver){
                     Board.draw();
                 }
+
+                Board.simpleDraw(GameTextType.getText(GameTextType.TIMEOUT));
             }
         }).start();
 

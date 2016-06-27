@@ -1,5 +1,9 @@
 package org.academiadecodigo.howlongcanyoulast.game;
 
+import org.academiadecodigo.howlongcanyoulast.client.Board;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Flag;
+import org.academiadecodigo.howlongcanyoulast.game.gameobjects.Player;
+
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,11 +19,16 @@ public abstract class CollisionDetector {
 
     }
 
-//    public static boolean flagCollision(String name, ConcurrentHashMap<String, Position> playerMap){
-//
-//
-//
-//    }
+    public static void flagCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap){
+
+        for (Player player : playerMap.values()) {
+            if (flag.getPos().getCol() == player.getPos().getCol() &&
+                    flag.getPos().getRow() == player.getPos().getRow()) {
+                player.setHasFlag(true);
+            }
+        }
+
+    }
 
 
 

@@ -46,6 +46,8 @@ public final class Board {
 
     private static String messageTime = "";
 
+    private static boolean drawFlag = true;
+
     //This class is not supposed to be instantiated
     private Board() {
     }
@@ -103,8 +105,10 @@ public final class Board {
         screen.clear();
 
         drawMap(map);
-        drawFlag();
         drawPlayers();
+
+        if (drawFlag) drawFlag();
+
         drawScores();
         drawTime(messageTime);
 
@@ -122,7 +126,7 @@ public final class Board {
     private static void drawPlayers() {
 
         if (allPlayersPositions != null) {
-            for (int i = 0; i < allPlayersPositions.length; i += 3) {
+            for (int i = 0; i < allPlayersPositions.length; i += 4) {
                 if (allPlayersPositions[i] == null) break;
 
                 screenWriter.setBackgroundColor(EnumColors.RED.getColor());
@@ -138,7 +142,14 @@ public final class Board {
                     e.printStackTrace();
                 }
 
-                screenWriter.drawString(Integer.parseInt(allPlayersPositions[i + 1]), Integer.parseInt(allPlayersPositions[i + 2]), "\u2588");
+                String toDraw = "\u2588";
+
+                if (Boolean.parseBoolean(allPlayersPositions[i + 3])) {
+                    drawFlag = false;
+                    toDraw = "f";
+                }
+
+                screenWriter.drawString(Integer.parseInt(allPlayersPositions[i + 1]), Integer.parseInt(allPlayersPositions[i + 2]), toDraw);
             }
         }
     }

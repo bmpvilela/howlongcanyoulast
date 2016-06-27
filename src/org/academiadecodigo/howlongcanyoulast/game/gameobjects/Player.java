@@ -16,7 +16,7 @@ public class Player extends GameObjects {
     public Player(String name, int col, int row) {
         super(col,row);
         this.name = name;
-        System.out.println("player Created");
+        //System.out.println("player Created");
 
     }
 

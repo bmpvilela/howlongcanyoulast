@@ -107,7 +107,8 @@ public class GameTime {
      * @return
      */
     public boolean isGameOver() {
-        return (getGameDuration() - minutes) == 0 && (59 - seconds) == 0;
+        getGameTime();
+        return (getGameDuration() - minutes) < 0;// && (59 - seconds) == 0;
     }
 
     /**
@@ -138,6 +139,6 @@ public class GameTime {
     }
 
     public int getGameDuration() {
-        return gameDuration + 1;
+        return gameDuration;
     }
 }

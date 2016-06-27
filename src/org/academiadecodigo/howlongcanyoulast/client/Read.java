@@ -26,7 +26,7 @@ public class Read implements Runnable{
         while(true) {
             String fromServer = receiveFromServer();
 
-            System.out.println("Data from Server: " + fromServer);
+            //System.out.println("Data from Server: " + fromServer);
 
             // TODO Andre removi souts, acho eu.... Ver so pelo sim pelo nao
             if (fromServer.length() > 100) {
@@ -48,9 +48,13 @@ public class Read implements Runnable{
             } else if(fromServer.equals("start")) {
                 Board.animation(GameTextType.getText(GameTextType.READY));
                 Board.animation(GameTextType.getText(GameTextType.GO));
+            } else if (fromServer.contains("gameOver")) {
+
+                controller.setGameOver();
+                break;
+
             } else {
                 controller.setPlayersData(fromServer);
-
             }
         }
     }
@@ -62,9 +66,9 @@ public class Read implements Runnable{
         try {
             // Create and receive UDP datagram packet from the socket
             receivePacket = new DatagramPacket(serverData, serverData.length);
-            System.out.println("waiting to receive from server");
+            //System.out.println("waiting to receive from server");
             clientSocket.receive(receivePacket); // blocks while packet not received
-            System.out.println("received");
+           // System.out.println("received");
 
         } catch (SocketException e) {
             e.printStackTrace();
@@ -76,7 +80,7 @@ public class Read implements Runnable{
     }
 
     public void display(byte[] serverData){
-        System.out.println(serverData);
+        //System.out.println(serverData);
     }
 
     public byte[] getPlayerPosition(){
