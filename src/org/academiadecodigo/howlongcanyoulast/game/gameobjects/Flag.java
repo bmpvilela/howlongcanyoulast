@@ -8,8 +8,18 @@ import org.academiadecodigo.howlongcanyoulast.game.gameobjects.GameObjects;
  */
 public class Flag extends GameObjects {
 
+    private boolean flagTaken;
+
     public Flag(int col, int row){
         super(col,row);
     }
 
+
+    public void setFlagTaken(boolean taken){
+        this.flagTaken = taken;
+    }
+
+    public boolean isFlagTaken(){
+        return flagTaken;
+    }
 }

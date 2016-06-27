@@ -157,7 +157,16 @@ public class Game {
         }
 
         positionsList.get(name).setPos(playerPos);
-        CollisionDetector.flagCollision(flag, positionsList);
+
+        if(!flag.isFlagTaken()) {
+            CollisionDetector.flagCollision(flag, positionsList);
+            if (positionsList.get(name).hasFlag()) {
+                flag.setPos(playerPos);
+            }
+        } else if(flag.isFlagTaken()) {
+            CollisionDetector.flagPlayerCollision(flag,positionsList);
+            flag.setPos(playerPos);
+        }
     }
 
 
@@ -231,4 +240,6 @@ public class Game {
     public Flag getFlag() {
         return flag;
     }
+
+
 }

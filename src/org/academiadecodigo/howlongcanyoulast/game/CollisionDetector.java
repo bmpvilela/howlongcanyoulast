@@ -13,23 +13,45 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class CollisionDetector {
 
 
-    public static boolean wallCollision(Position position, ArrayList<Position> positions){
+    public static boolean wallCollision(Position position, ArrayList<Position> positions) {
 
         return positions.contains(position);
 
     }
 
-    public static void flagCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap){
+    public static boolean flagCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap) {
 
         for (Player player : playerMap.values()) {
             if (flag.getPos().getCol() == player.getPos().getCol() &&
                     flag.getPos().getRow() == player.getPos().getRow()) {
                 player.setHasFlag(true);
+                return true;
+
             }
         }
+        System.out.println(flag.getPos().getCol() + " " + flag.getPos().getRow());
+        return false;
 
     }
 
+    public static boolean flagPlayerCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap) {
+
+        Player flagPlayer = null;
+
+        for (Player player : playerMap.values()) {
+            if (player.hasFlag()) {
+                flagPlayer = player;
+            }
+        }
+        for (Player player : playerMap.values()) {
+            if (flagCollision(flag, playerMap)) {
+                flagPlayer.setHasFlag(false);
+                player.setHasFlag(true);
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
