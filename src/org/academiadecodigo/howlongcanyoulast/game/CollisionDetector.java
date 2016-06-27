@@ -19,37 +19,31 @@ public abstract class CollisionDetector {
 
     }
 
-    public static boolean flagCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap) {
+    /**
+     * Iterates over the hashmap and flag's the player with the flag
+     * @param flag gameobject
+     * @param player check for one player
+     * @return true if found false if not
+     */
+    public static boolean flagCollision(Flag flag, Player player) {
 
-        for (Player player : playerMap.values()) {
             if (flag.getPos().getCol() == player.getPos().getCol() &&
                     flag.getPos().getRow() == player.getPos().getRow()) {
-                player.setHasFlag(true);
                 return true;
 
             }
-        }
-        System.out.println(flag.getPos().getCol() + " " + flag.getPos().getRow());
+
+        //System.out.println(flag.getPos().getCol() + " " + flag.getPos().getRow());
         return false;
 
     }
 
-    public static boolean flagPlayerCollision(Flag flag, ConcurrentHashMap<String, Player> playerMap) {
+    public static boolean flagPlayerCollision(Flag flag, Player challenger) {
 
-        Player flagPlayer = null;
-
-        for (Player player : playerMap.values()) {
-            if (player.hasFlag()) {
-                flagPlayer = player;
-            }
-        }
-        for (Player player : playerMap.values()) {
-            if (flagCollision(flag, playerMap)) {
-                flagPlayer.setHasFlag(false);
-                player.setHasFlag(true);
+            if (flagCollision(flag, challenger)) {
                 return true;
             }
-        }
+
         return false;
     }
 

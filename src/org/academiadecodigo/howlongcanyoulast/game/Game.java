@@ -36,6 +36,8 @@ public class Game {
     private UDPServer myServer;
     private MazeGenerator mazeGenerator;
 
+    private Player hasFlag;
+
     private String[] map;
 
     public Game(int totalPlayers) {
@@ -124,30 +126,30 @@ public class Game {
 
     public void movePlayer(String name, Direction whereTo) {
 
-        Position playerPos = positionsList.get(name).getPos();
+        Player player = positionsList.get(name);
 
         switch (whereTo) {
 
             case LEFT:
-                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() - 1, playerPos.getRow()), wallsLocations)) {
-                    playerPos.setCol(playerPos.getCol() - 1);
+                if (!CollisionDetector.wallCollision(new Position(player.getPos().getCol() - 1, player.getPos().getRow()), wallsLocations)) {
+                    player.getPos().setCol(player.getPos().getCol() - 1);
                 }
                 break;
 
             case RIGHT:
-                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol() + 1, playerPos.getRow()), wallsLocations)) {
-                    playerPos.setCol(playerPos.getCol() + 1);
+                if (!CollisionDetector.wallCollision(new Position(player.getPos().getCol() + 1, player.getPos().getRow()), wallsLocations)) {
+                    player.getPos().setCol(player.getPos().getCol() + 1);
                 }
                 break;
 
             case UP:
-                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() - 1), wallsLocations)) {
-                    playerPos.setRow(playerPos.getRow() - 1);
+                if (!CollisionDetector.wallCollision(new Position(player.getPos().getCol(), player.getPos().getRow() - 1), wallsLocations)) {
+                    player.getPos().setRow(player.getPos().getRow() - 1);
                 }
                 break;
             case DOWN:
-                if (!CollisionDetector.wallCollision(new Position(playerPos.getCol(), playerPos.getRow() + 1), wallsLocations)) {
-                    playerPos.setRow(playerPos.getRow() + 1);
+                if (!CollisionDetector.wallCollision(new Position(player.getPos().getCol(), player.getPos().getRow() + 1), wallsLocations)) {
+                    player.getPos().setRow(player.getPos().getRow() + 1);
                 }
                 break;
             default:
@@ -156,16 +158,21 @@ public class Game {
 
         }
 
-        positionsList.get(name).setPos(playerPos);
+        positionsList.get(name).setPos(player.getPos());
 
         if(!flag.isFlagTaken()) {
-            CollisionDetector.flagCollision(flag, positionsList);
-            if (positionsList.get(name).hasFlag()) {
-                flag.setPos(playerPos);
+            if(CollisionDetector.flagCollision(flag, player)){
+                hasFlag = player;
+                flag.setFlagTaken(true);
+                positionsList.get(name).setHasFlag(true);
             }
+
         } else if(flag.isFlagTaken()) {
-            CollisionDetector.flagPlayerCollision(flag,positionsList);
-            flag.setPos(playerPos);
+            CollisionDetector.flagPlayerCollision(flag,player);
+            hasFlag.setHasFlag(false);
+            hasFlag = player;
+            player.setHasFlag(true);
+            flag.setPos(player.getPos());
         }
     }
 
